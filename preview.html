@@ -8,7 +8,11 @@
   <title>KirinDL Web — Downloader Preview</title>
   <link rel="icon" type="image/png" href="pages-assets/favicon.png">
   <link rel="stylesheet" href="public/kirindl-preview.css">
-  <script src="public/kirindl-preview.js" defer></script>
+  <link rel="stylesheet" href="public/components/hamburger/hamburger.css">
+  <link rel="stylesheet" href="public/components/login-register/login-register.css">
+  <link rel="stylesheet" href="public/components/footer/footer.css">
+  <link rel="stylesheet" href="public/components/downloader/downloader.css">
+  <script type="module" src="public/kirindl-preview.js"></script>
 </head>
 <body>
   <div class="ambient ambient-one" aria-hidden="true"></div>
@@ -21,13 +25,13 @@
       </a>
       <div class="header-actions">
         <div class="menu-wrap">
-          <button class="header-button menu-trigger" id="menu-trigger" type="button" aria-expanded="false" aria-controls="site-menu">
-            <span class="hamburger" aria-hidden="true"><i></i><i></i><i></i></span><span>Menu</span><span class="button-chevron" aria-hidden="true">⌄</span>
+          <button class="header-button menu-trigger" id="menu-trigger" type="button" aria-expanded="false" aria-label="Open navigation menu" aria-controls="site-menu">
+            <span class="hamburger" aria-hidden="true"><i></i><i></i><i></i></span><span class="header-action-label">Menu</span><svg class="menu-trigger-chevron" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
           </button>
           <nav class="menu-panel" id="site-menu" aria-label="Main navigation" hidden>
             <div class="menu-panel-heading"><span class="eyebrow">KIRINDL NAVIGATION</span><strong>Explore workspace</strong><p>Jump to a section or continue from your last visit.</p></div>
             <details class="menu-group" open>
-              <summary><span>Workspace</span><span class="menu-count">04</span></summary>
+              <summary><span>Workspace</span><span class="menu-count">04</span><svg class="menu-chevron" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></summary>
               <div class="menu-links">
                 <a href="#top" data-page-link data-page-label="Home"><span class="menu-link-icon">⌂</span>Home</a>
                 <a href="#downloader" data-page-link data-page-label="Downloader"><span class="menu-link-icon">↧</span>Downloader</a>
@@ -36,23 +40,23 @@
               </div>
             </details>
             <details class="menu-group">
-              <summary><span>Project pages</span><span class="menu-count">04</span></summary>
+              <summary><span>Project pages</span><span class="menu-count">04</span><svg class="menu-chevron" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></summary>
               <div class="menu-links">
-                <a href="pages/contact.html" data-page-link data-page-label="Contact"><span class="menu-link-icon">↗</span>Contact</a>
-                <a href="pages/support.html" data-page-link data-page-label="Support"><span class="menu-link-icon">↗</span>Support</a>
-                <a href="pages/issues.html" data-page-link data-page-label="Issues"><span class="menu-link-icon">↗</span>Issues</a>
-                <a href="pages/privacy.html" data-page-link data-page-label="Privacy"><span class="menu-link-icon">↗</span>Privacy</a>
+                <a href="pages/contact.html" data-page-link data-page-label="Contact"><svg class="menu-link-icon menu-link-external" viewBox="0 0 24 24" aria-hidden="true"><path d="M14 4h6v6M20 4l-9 9"/><path d="M18 13v6a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h6"/></svg>Contact</a>
+                <a href="pages/support.html" data-page-link data-page-label="Support"><svg class="menu-link-icon menu-link-external" viewBox="0 0 24 24" aria-hidden="true"><path d="M14 4h6v6M20 4l-9 9"/><path d="M18 13v6a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h6"/></svg>Support</a>
+                <a href="pages/issues.html" data-page-link data-page-label="Issues"><svg class="menu-link-icon menu-link-external" viewBox="0 0 24 24" aria-hidden="true"><path d="M14 4h6v6M20 4l-9 9"/><path d="M18 13v6a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h6"/></svg>Issues</a>
+                <a href="pages/privacy.html" data-page-link data-page-label="Privacy"><svg class="menu-link-icon menu-link-external" viewBox="0 0 24 24" aria-hidden="true"><path d="M14 4h6v6M20 4l-9 9"/><path d="M18 13v6a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h6"/></svg>Privacy</a>
               </div>
             </details>
             <div class="remember-card">
               <div><span class="eyebrow">REMEMBER LAST PAGE</span><strong data-resume-label>Downloader</strong></div>
-              <a href="#downloader" data-resume-link>Resume <span aria-hidden="true">↗</span></a>
+              <a href="#downloader" data-resume-link>Resume <svg class="menu-resume-arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg></a>
             </div>
           </nav>
         </div>
-        <button class="header-button account-trigger" id="account-trigger" type="button">
+        <button class="header-button account-trigger" id="account-trigger" type="button" aria-label="Login or register">
           <svg class="account-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20Zm0 4a3.25 3.25 0 1 1 0 6.5A3.25 3.25 0 0 1 12 6Zm0 14a7.94 7.94 0 0 1-5.74-2.45C6.3 15.64 10.1 14.5 12 14.5s5.7 1.14 5.74 3.05A7.94 7.94 0 0 1 12 20Z"/></svg>
-          <span>Login / Register</span>
+          <span class="header-action-label">Login / Register</span>
         </button>
       </div>
     </div>
@@ -136,10 +140,11 @@
         <p class="panel-footnote">This temporary result will close automatically and return to the clean link-input screen.</p>
       </section>
     </section>
+  </main>
 
   <footer class="site-footer">
     <a class="footer-brand" href="#top" data-page-link data-page-label="Home">KirinDL <span>WEB</span></a>
-    <span>Independent web experience · <a href="https://github.com/Lanzkila/KirinDLWeb">Source on GitHub ↗</a></span>
+    <span>Independent web experience · <a href="https://github.com/Lanzkila/KirinDLWeb">Source on GitHub <svg class="footer-external-arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg></a></span>
     <span>Part 1 · Interface preview</span>
   </footer>
 

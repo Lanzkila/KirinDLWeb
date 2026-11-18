@@ -1,0 +1,25 @@
+/* Hamburger navigation component */
+.menu-panel{position:fixed;top:88px;left:50%;right:auto;width:min(390px,calc(100vw - 32px));max-height:calc(100vh - 104px);overflow-y:auto;transform:translateX(-50%);transform-origin:top center;animation:kirin-menu-enter .18s ease-out}
+.menu-panel[hidden]{display:none!important}
+@keyframes kirin-menu-enter{from{opacity:0;transform:translate(-50%,-7px) scale(.99)}to{opacity:1;transform:translate(-50%,0) scale(1)}}
+.menu-trigger{display:inline-flex;align-items:center;justify-content:center}
+.menu-trigger-chevron,.menu-chevron,.menu-resume-arrow,.menu-link-external{display:block;flex:0 0 auto;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;transform:none;vertical-align:middle}
+.menu-trigger-chevron{width:16px;height:16px;margin-left:1px;color:#8391af}
+.menu-group summary{display:flex;align-items:center;justify-content:flex-start;gap:9px}
+.menu-group summary:after{content:none!important;display:none!important}
+.menu-count{margin-left:auto}
+.menu-chevron{width:15px;height:15px;color:#8191b1;transform-origin:50% 50%;transition:transform .18s ease}
+.menu-group:not([open]) .menu-chevron{transform:rotate(-90deg)}
+.menu-link-icon{display:grid;place-items:center;flex:0 0 22px;width:22px;height:22px;box-sizing:border-box}
+.menu-link-external{padding:3px;border-radius:7px;background:rgba(115,139,224,.14);color:#9cb0ff;stroke-width:1.7}
+.menu-resume-arrow{width:14px;height:14px;color:var(--cyan)}
+.remember-card a{display:inline-flex;align-items:center;justify-content:center;gap:6px;line-height:1}
+@media(max-width:600px){
+ .menu-panel{top:76px;left:50%;right:auto;width:min(390px,calc(100vw - 24px));max-height:calc(100vh - 88px);transform:translateX(-50%);animation-name:kirin-menu-enter-mobile}
+ @keyframes kirin-menu-enter-mobile{from{opacity:0;transform:translate(-50%,-7px) scale(.99)}to{opacity:1;transform:translate(-50%,0) scale(1)}}
+ .menu-trigger-chevron,.header-action-label{display:none!important}
+ .header-button.menu-trigger,.header-button.account-trigger{width:42px;min-width:42px;height:42px;min-height:42px;padding:0;gap:0;justify-content:center}
+ .hamburger{width:17px}
+ .account-icon{display:block;width:19px;height:19px;flex:0 0 19px}
+}
+@media(max-width:380px){.header-button.menu-trigger,.header-button.account-trigger{width:39px;min-width:39px;height:39px;min-height:39px}}

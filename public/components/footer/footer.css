@@ -1,0 +1,8 @@
+/* Shared footer component — visible on desktop and mobile */
+.site-footer{display:flex!important;visibility:visible!important;position:relative;z-index:1;width:100%;min-height:70px;align-items:center;justify-content:center;flex-wrap:wrap;gap:10px 28px;padding:18px 24px;border-top:1px solid rgba(171,187,224,.1);background:rgba(8,11,20,.74);color:#8190aa;text-align:center;font-size:10px}
+.site-footer>span{display:inline-flex;align-items:center;justify-content:center;gap:4px}
+.site-footer a{display:inline-flex;align-items:center;justify-content:center;gap:4px}
+.site-footer a:not(.footer-brand){color:#95a8e5}
+.footer-external-arrow{display:block;width:13px;height:13px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.footer-brand{display:inline-flex;align-items:center;justify-content:center;gap:4px}
+@media(max-width:600px){.site-footer{min-height:0;padding:17px 14px calc(17px + env(safe-area-inset-bottom));flex-direction:column;align-items:center;justify-content:center;gap:9px;text-align:center}}

@@ -1,0 +1,7 @@
+/* Login/Register dialog component */
+.account-dialog{position:fixed;inset:0;top:0;left:0;right:0;bottom:0;margin:auto;transform:none;width:min(440px,calc(100vw - 28px));max-height:min(90vh,760px);overflow:auto}
+.account-icon,.auth-tab-icon{display:block;flex:0 0 18px;width:18px;height:18px;fill:currentColor}
+.account-trigger{display:inline-flex;align-items:center;justify-content:center}
+.auth-tab{display:inline-flex;align-items:center;justify-content:center;gap:8px;line-height:1}
+.auth-tab-icon{vertical-align:middle}
+@media(max-width:600px){.account-dialog{width:calc(100vw - 26px);max-width:440px;max-height:calc(100dvh - 30px);inset:0;margin:auto;transform:none}}
