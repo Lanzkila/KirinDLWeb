@@ -29,6 +29,10 @@ KirinDLWeb/
 └── tests/                   # Unit tests
 ```
 
+## Development roadmap
+
+The current nine-stage plan and the verified state of each stage are recorded in [docs/roadmap/progress-1-9.md](docs/roadmap/progress-1-9.md). Read and update that file before continuing development so completed, partial, and planned work remain distinct.
+
 ## Local development
 
 Requirements: Node.js 22 or newer.
