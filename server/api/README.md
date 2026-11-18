@@ -12,4 +12,6 @@ Request body example:
 
     {"url":"https://example.com/media","engine":"auto"}
 
-The browser must be configured with the backend HTTPS base URL in public/kirindl-config.js. The backend is implemented but is not deployed as a public instance yet.
+Task state is persisted in the SQLite database at KIRINDL_DATA_DIR/tasks.sqlite3. Download output is stored under the same persistent data directory. A completed task survives a process restart when its volume is retained; an interrupted active task is marked failed and must be resubmitted.
+
+The browser must be configured with the backend HTTPS base URL in public/kirindl-config.js. The backend code is implemented but is not deployed as a public instance yet.

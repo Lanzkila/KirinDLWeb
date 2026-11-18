@@ -22,6 +22,8 @@ MAX_WORKERS = int(os.getenv("KIRINDL_MAX_WORKERS", "2"))
 MAX_ACTIVE_TASKS = int(os.getenv("KIRINDL_MAX_ACTIVE_TASKS", "3"))
 MAX_DOWNLOAD_BYTES = int(os.getenv("KIRINDL_MAX_DOWNLOAD_BYTES", str(2 * 1024 * 1024 * 1024)))
 TASK_TIMEOUT_SECONDS = int(os.getenv("KIRINDL_TASK_TIMEOUT_SECONDS", "3600"))
+RETENTION_SECONDS = int(os.getenv("KIRINDL_RETENTION_SECONDS", str(24 * 60 * 60)))
+CLEANUP_INTERVAL_SECONDS = int(os.getenv("KIRINDL_CLEANUP_INTERVAL_SECONDS", "300"))
 API_TOKEN = os.getenv("KIRINDL_API_TOKEN", "").strip()
 ALLOWED_ORIGINS = [
     item.strip()
@@ -41,6 +43,8 @@ async def lifespan(app: FastAPI):
         max_active_tasks=MAX_ACTIVE_TASKS,
         max_download_bytes=MAX_DOWNLOAD_BYTES,
         task_timeout_seconds=TASK_TIMEOUT_SECONDS,
+        retention_seconds=RETENTION_SECONDS,
+        cleanup_interval_seconds=CLEANUP_INTERVAL_SECONDS,
     )
     yield
     app.state.task_manager.close()
@@ -48,7 +52,7 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(
     title="KirinDL Web Engine API",
-    version="0.1.0",
+    version="0.2.0",
     description="Server-side yt-dlp and gallery-dl adapters for the KirinDL Web frontend.",
     lifespan=lifespan,
 )
@@ -74,11 +78,23 @@ def verify_api_token(authorization: str | None = Header(default=None)) -> None:
 
 
 _request_times: dict[str, Deque[float]] = defaultdict(deque)
+_last_rate_limit_prune = 0.0
 
 
 def rate_limit(request: Request) -> None:
+    global _last_rate_limit_prune
     client = request.client.host if request.client else "unknown"
     now = time.monotonic()
+
+    # Bound memory use when many distinct client addresses hit task creation.
+    if now - _last_rate_limit_prune >= 60.0:
+        for host, timestamps in list(_request_times.items()):
+            while timestamps and now - timestamps[0] > 60.0:
+                timestamps.popleft()
+            if not timestamps:
+                _request_times.pop(host, None)
+        _last_rate_limit_prune = now
+
     timestamps = _request_times[client]
     while timestamps and now - timestamps[0] > 60.0:
         timestamps.popleft()
