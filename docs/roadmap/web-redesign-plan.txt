@@ -1,0 +1,82 @@
+KIRINDL WEB — WEBSITE REDESIGN PLAN
+=================================
+
+Repository: Lanzkila/KirinDLWeb
+Related roadmap: docs/roadmap/progress-1-9.md
+Status: PLANNING ONLY — implementation has not started
+
+1. MAIN OBJECTIVE
+-----------------
+Rombak website KirinDL menjadi website khas untuk pengalaman downloader versi web.
+Website ini mempunyai identiti dan susun atur sendiri. Reka bentuknya tidak perlu
+meniru UI aplikasi Android KirinDL.
+
+Fokus utama website ialah pengguna boleh memasukkan pautan media terus pada website
+melalui ruangan input link yang jelas dan mudah digunakan.
+
+2. MAIN WEB INTERFACE
+---------------------
+- Bina homepage/web downloader yang baharu, bukan sekadar mengekalkan reka bentuk
+  Sites Pages yang lama.
+- Jadikan input URL/link sebagai elemen utama pada halaman downloader.
+- Sediakan tindakan yang sesuai seperti paste, clear, dan submit/analyse.
+- Berikan maklum balas yang jelas untuk pautan kosong, pautan tidak sah, laman yang
+  belum disokong, proses analisis, dan kegagalan.
+- Selepas sistem backend dan extractor benar-benar tersedia, ruang hasil boleh
+  memaparkan metadata media serta pilihan format/resolusi/audio yang disokong.
+- Jangan paparkan fungsi palsu atau mendakwa pautan sudah dianalisis/dimuat turun
+  sekiranya backend sebenar belum disambungkan.
+
+3. DESIGN DIRECTION
+-------------------
+- Reka bentuk baharu khusus untuk web desktop dan telefon.
+- Responsif, kemas, mudah difahami, dan sesuai untuk penggunaan melalui browser.
+- Bebas daripada susun atur Android; jangan paksa website menyalin skrin atau menu app.
+- Utamakan aliran kerja input link dan hasil analisis, bukan hiasan semata-mata.
+- Pastikan input, butang, status, dan mesej ralat boleh digunakan dengan keyboard
+  serta mempunyai label/fokus yang jelas.
+
+4. EXISTING WEBSITE CONTENT
+---------------------------
+- Reka bentuk homepage Sites Pages yang telah dimigrasikan dianggap reka bentuk
+  sementara dan akan digantikan apabila rombakan web bermula.
+- Halaman maklumat seperti Contact, Issues, Privacy, dan Support boleh dikekalkan
+  serta disesuaikan dengan identiti baharu.
+- Semak pautan dan laluan halaman sedia ada supaya rombakan tidak memutuskan
+  halaman maklumat yang masih diperlukan.
+- Gunakan struktur frontend dalam repo KirinDLWeb sebagai asas selepas menilai
+  fail sedia ada; jangan mengubah repo Android untuk kerja reka bentuk web.
+
+5. TECHNICAL BOUNDARIES
+-----------------------
+- Semua pembangunan website dibuat dalam Lanzkila/KirinDLWeb.
+- Repo Lanzkila/KirinDL (Android) tidak boleh diubah untuk kerja rombakan ini.
+- Input link pada frontend bukan bermaksud extractor atau downloader sudah tersedia.
+- GitHub Pages hanya untuk frontend statik; pemprosesan downloader sebenar yang
+  memerlukan server/worker mesti dibina dan dihoskan secara berasingan.
+- App–Web bridge dan integrasi Android bukan sebahagian daripada kerja reka bentuk
+  ini melainkan diminta secara khusus kemudian.
+
+6. WORK SESSION / PART 1
+------------------------
+Status: BELUM DIMULAKAN
+
+Pengguna akan memulakan Part 1 secara berasingan selepas dokumen ini disediakan.
+Jangan anggap skop Part 1 atau mula mengubah kod sebelum arahan Part 1 diterima.
+Apabila Part 1 dimulakan, ikut arahan pengguna dan semak kod berkaitan terlebih
+dahulu sebelum membuat perubahan.
+
+7. PROGRESS TRACKING
+--------------------
+Dokumen ini merekodkan hala tuju rombakan website sahaja. Ia tidak menukar status
+Progress 1–9 dalam docs/roadmap/progress-1-9.md.
+
+Status semasa yang berkaitan:
+- Migrasi website Sites Pages ke repo KirinDLWeb: COMPLETE.
+- Asas aplikasi web: PARTIAL / SCAFFOLD.
+- Downloader web sebenar: NOT STARTED.
+- Rombakan reka bentuk khas web: PLANNED / NOT STARTED.
+
+Kemas kini dokumen ini selepas setiap bahagian kerja benar-benar dilaksanakan
+dan disahkan. Jangan tandakan sesuatu sebagai siap hanya kerana fail atau
+placeholder telah diwujudkan.
