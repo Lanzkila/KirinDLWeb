@@ -3,7 +3,7 @@ KIRINDL WEB — WEBSITE REDESIGN PLAN
 
 Repository: Lanzkila/KirinDLWeb
 Related roadmap: docs/roadmap/progress-1-9.md
-Status: PLANNING ONLY — implementation has not started
+Status: PART 1 UI PREVIEW IMPLEMENTED — REAL DOWNLOADER NOT CONNECTED
 
 1. MAIN OBJECTIVE
 -----------------
@@ -16,66 +16,86 @@ melalui ruangan input link yang jelas dan mudah digunakan.
 
 2. MAIN WEB INTERFACE
 ---------------------
-- Bina homepage/web downloader yang baharu, bukan sekadar mengekalkan reka bentuk
-  Sites Pages yang lama.
-- Jadikan input URL/link sebagai elemen utama pada halaman downloader.
-- Sediakan tindakan yang sesuai seperti paste, clear, dan submit/analyse.
-- Berikan maklum balas yang jelas untuk pautan kosong, pautan tidak sah, laman yang
-  belum disokong, proses analisis, dan kegagalan.
-- Selepas sistem backend dan extractor benar-benar tersedia, ruang hasil boleh
-  memaparkan metadata media serta pilihan format/resolusi/audio yang disokong.
-- Jangan paparkan fungsi palsu atau mendakwa pautan sudah dianalisis/dimuat turun
-  sekiranya backend sebenar belum disambungkan.
+- Homepage/web downloader baharu, bukan sekadar reka bentuk Sites Pages lama.
+- Input URL/link sebagai elemen utama pada halaman downloader.
+- Tindakan Paste, Clear dan Submit/Analyse.
+- Maklum balas untuk pautan kosong, format URL tidak sah, dan backend belum disambungkan.
+- Metadata dan pilihan format hanya akan ditunjukkan selepas extractor/backend tersedia.
+- Jangan dakwa pautan sudah dianalisis atau dimuat turun jika backend belum disambungkan.
 
 3. DESIGN DIRECTION
 -------------------
-- Reka bentuk baharu khusus untuk web desktop dan telefon.
-- Responsif, kemas, mudah difahami, dan sesuai untuk penggunaan melalui browser.
-- Bebas daripada susun atur Android; jangan paksa website menyalin skrin atau menu app.
-- Utamakan aliran kerja input link dan hasil analisis, bukan hiasan semata-mata.
-- Pastikan input, butang, status, dan mesej ralat boleh digunakan dengan keyboard
-  serta mempunyai label/fokus yang jelas.
+- Reka bentuk khas web desktop dan telefon, responsif dan mudah digunakan.
+- Bebas daripada susun atur Android; tidak perlu menyalin skrin atau menu app.
+- Utamakan aliran input link dan hasil analisis.
+- Pastikan input, butang, status dan mesej ralat boleh digunakan dengan keyboard.
 
 4. EXISTING WEBSITE CONTENT
 ---------------------------
-- Reka bentuk homepage Sites Pages yang telah dimigrasikan dianggap reka bentuk
-  sementara dan akan digantikan apabila rombakan web bermula.
-- Halaman maklumat seperti Contact, Issues, Privacy, dan Support boleh dikekalkan
-  serta disesuaikan dengan identiti baharu.
-- Semak pautan dan laluan halaman sedia ada supaya rombakan tidak memutuskan
-  halaman maklumat yang masih diperlukan.
-- Gunakan struktur frontend dalam repo KirinDLWeb sebagai asas selepas menilai
-  fail sedia ada; jangan mengubah repo Android untuk kerja reka bentuk web.
+- Reka bentuk homepage Sites Pages ialah sementara dan dikekalkan sehingga preview baharu disemak.
+- Halaman Contact, Issues, Privacy dan Support dikekalkan.
+- Laluan halaman maklumat sedia ada perlu kekal berfungsi.
+- Semua kerja dibuat dalam repo KirinDLWeb sahaja.
 
 5. TECHNICAL BOUNDARIES
 -----------------------
-- Semua pembangunan website dibuat dalam Lanzkila/KirinDLWeb.
 - Repo Lanzkila/KirinDL (Android) tidak boleh diubah untuk kerja rombakan ini.
-- Input link pada frontend bukan bermaksud extractor atau downloader sudah tersedia.
-- GitHub Pages hanya untuk frontend statik; pemprosesan downloader sebenar yang
-  memerlukan server/worker mesti dibina dan dihoskan secara berasingan.
-- App–Web bridge dan integrasi Android bukan sebahagian daripada kerja reka bentuk
-  ini melainkan diminta secara khusus kemudian.
+- Input link frontend bukan bermaksud extractor/downloader sudah tersedia.
+- GitHub Pages hanya frontend statik; pemprosesan sebenar memerlukan backend berasingan.
+- Login/Register Part 1 ialah UI preview. Jangan hantar atau simpan kata laluan sebelum
+  backend autentikasi dan storan selamat tersedia.
+- App–Web bridge bukan sebahagian daripada Part 1.
 
-6. WORK SESSION / PART 1
-------------------------
-Status: BELUM DIMULAKAN
+6. PART 1 — HEADER, LINK INPUT, PROGRESS & DOWNLOADS
+----------------------------------------------------
+Status: UI PREVIEW IMPLEMENTED; AWAITING USER REVIEW
 
-Pengguna akan memulakan Part 1 secara berasingan selepas dokumen ini disediakan.
-Jangan anggap skop Part 1 atau mula mengubah kod sebelum arahan Part 1 diterima.
-Apabila Part 1 dimulakan, ikut arahan pengguna dan semak kod berkaitan terlebih
-dahulu sebelum membuat perubahan.
+Header:
+- Brand KirinDL di sebelah kiri.
+- Menu hamburger dengan submenu Workspace dan Project Pages.
+- Remember Last Page: simpan section/halaman terakhir dan sediakan pautan Resume.
+- Butang Login / Register bersebelahan hamburger.
+- Login/Register memaparkan borang berasingan tetapi belum mempunyai autentikasi sebenar.
+  Tiada data akaun dihantar atau disimpan.
+
+URL input:
+- Kotak input URL sebagai fokus utama.
+- Bingkai glow berputar dengan animasi smooth mengelilingi kotak input.
+- Butang Paste dan Clear.
+- Pilihan enjin: Auto detect, yt-dlp, gallery-dl.
+- Butang Analyse link.
+- Validasi frontend menyemak format URL http/https sahaja; tiada metadata fetch,
+  extraction atau download sebenar.
+
+Download progress:
+- Panel progress di bawah kotak input.
+- Paparkan Video 0–100%, Audio 0–100%, Processing dan Merging.
+- Nilai semasa ialah placeholder idle (0% / Waiting), bukan kemajuan sebenar.
+- Progress hidup hanya selepas web engine dan task API disambungkan.
+
+Downloads:
+- Panel Downloads disusun bersebelahan panel progress pada desktop dan menegak pada telefon.
+- Paparkan empty state dan ringkasan Active / Completed / Queued.
+- Fail sebenar akan disenaraikan di sini selepas downloader tersedia.
+
+Preview:
+- Fail: preview.html
+- CSS: public/kirindl-preview.css
+- JavaScript: public/kirindl-preview.js
+- Raw.githack development preview:
+  https://raw.githack.com/Lanzkila/KirinDLWeb/main/preview.html
+- Preview berasingan ini belum menggantikan homepage production.
+  Homepage lama dikekalkan sehingga reka bentuk disemak dan dipersetujui.
 
 7. PROGRESS TRACKING
 --------------------
-Dokumen ini merekodkan hala tuju rombakan website sahaja. Ia tidak menukar status
-Progress 1–9 dalam docs/roadmap/progress-1-9.md.
-
-Status semasa yang berkaitan:
-- Migrasi website Sites Pages ke repo KirinDLWeb: COMPLETE.
+- Migrasi Sites Pages: COMPLETE.
 - Asas aplikasi web: PARTIAL / SCAFFOLD.
-- Downloader web sebenar: NOT STARTED.
-- Rombakan reka bentuk khas web: PLANNED / NOT STARTED.
+- Part 1 UI preview: IMPLEMENTED; awaiting visual review.
+- Downloader web sebenar / metadata extraction: NOT STARTED.
+- Backend dan task API: NOT STARTED.
+- Authentication: UI preview only; backend not started.
+- App–Web bridge: SPECIFICATION ONLY.
 
 Kemas kini dokumen ini selepas setiap bahagian kerja benar-benar dilaksanakan
 dan disahkan. Jangan tandakan sesuatu sebagai siap hanya kerana fail atau
