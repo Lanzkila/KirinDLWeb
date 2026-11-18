@@ -160,3 +160,14 @@ Raw.githack development URL: https://raw.githack.com/Lanzkila/KirinDLWeb/main/pr
 - Backend storage checks preserve headroom for the output cap, ZIP packaging and a separate free-space reserve.
 - CI now checks Python and shell syntax, Docker Compose configuration, backend tests, Docker image build and a read-only container health check.
 - Deployment scripts are prepared but not executed against a cloud account. The public backend URL, Droplet ID, operator SSH IP, DNS domain and Turnstile keys are still unconfigured.
+
+
+### Final validation — 2026-11-19
+
+- Main commit: `4ad9343b975523a5d1c10714750351a0b1ec35f2`.
+- Web CI: SUCCESS — 34 backend tests passed; frontend unit tests and static build passed.
+- Deployment validation: SUCCESS — DigitalOcean firewall script compiles, shell scripts pass syntax checks, Docker Compose configuration validates.
+- Docker: SUCCESS — image built and a read-only, non-root container started; `GET /api/v1/health` returned HTTP 200.
+- GitHub Pages build/deployment: SUCCESS.
+- Deploy KirinDL Web workflow: SUCCESS.
+- No DigitalOcean Droplet or paid cloud resource has been created. Live backend deployment and real-source download validation remain pending the owner's Droplet, DNS domain, SSH source IP and Cloudflare Turnstile keys.
