@@ -37,5 +37,23 @@
 .open-ready-link{border-color:rgba(121,214,202,.23);background:rgba(52,123,117,.16);color:#91ddd2}
 .downloads-panel .ready-card.is-error{border-color:rgba(235,133,145,.22);background:rgba(111,43,57,.13)}
 .downloads-panel .ready-card.is-error .ready-icon{color:#f0a7b1;background:rgba(235,133,145,.13)}
-@media(max-width:600px){.page-wrap{width:calc(100% - 28px);padding:22px 0 26px}.task-flow{margin-top:18px}.page-wrap:has(.task-flow:not([hidden])){padding-top:22px}.ready-actions{display:grid;grid-template-columns:1fr 1fr}}
+@media(max-width:600px){
+  .page-wrap{width:calc(100% - 28px);padding:22px 0 26px}
+  .task-flow{margin-top:18px}
+  .page-wrap:has(.task-flow:not([hidden])){padding-top:22px}
+  .ready-actions{display:grid;grid-template-columns:1fr 1fr}
+  .input-controls{align-items:end;flex-direction:row;justify-content:space-between;gap:10px}
+  .engine-control{flex:1 1 auto;min-width:0;width:auto}
+  .engine-control>label{font-size:9px}
+  .select-wrap select{height:41px;padding:0 30px;font-size:10px}
+  .engine-symbol{left:10px;font-size:12px}
+  .select-arrow{right:9px}
+  #analyse-button{flex:0 0 auto;min-height:41px;gap:7px;padding:0 11px;border-radius:999px;font-size:10px;white-space:nowrap;box-shadow:none}
+  #analyse-button .action-arrow{width:14px;height:14px}
+}
+@media(max-width:360px){
+  #analyse-button{gap:5px;padding:0 9px;font-size:9px}
+  #analyse-button .action-arrow{width:13px;height:13px}
+  .input-controls{gap:8px}
+}
 @media(prefers-reduced-motion:reduce){.process-step.is-active .step-symbol,.gallery-progress-track span{animation:none}}
