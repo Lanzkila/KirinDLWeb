@@ -1,8 +1,20 @@
 from __future__ import annotations
 
+import pytest
 from fastapi.testclient import TestClient
 
+from kirindl_server import main
 from kirindl_server.main import app
+
+
+@pytest.fixture(autouse=True)
+def reset_rate_limit_state():
+    # Each API test starts with a fresh per-process request bucket.
+    main._request_times.clear()
+    main._last_rate_limit_prune = 0.0
+    yield
+    main._request_times.clear()
+    main._last_rate_limit_prune = 0.0
 
 
 def test_health_endpoint():
@@ -70,8 +82,6 @@ def test_download_missing_task_returns_conflict():
 
 
 def test_task_creation_requires_turnstile_when_enabled(monkeypatch):
-    from kirindl_server import main
-
     monkeypatch.setattr(main, "TURNSTILE_REQUIRED", True)
     monkeypatch.setattr(main, "TURNSTILE_SECRET", "")
     with TestClient(app) as client:
@@ -84,8 +94,6 @@ def test_task_creation_requires_turnstile_when_enabled(monkeypatch):
 
 
 def test_task_creation_rejects_missing_token_when_turnstile_is_configured(monkeypatch):
-    from kirindl_server import main
-
     monkeypatch.setattr(main, "TURNSTILE_REQUIRED", True)
     monkeypatch.setattr(main, "TURNSTILE_SECRET", "test-secret")
     with TestClient(app) as client:
@@ -108,3 +116,16 @@ def test_challenge_token_has_a_strict_maximum_length():
             },
         )
     assert response.status_code == 422
+
+
+def test_task_creation_rate_limit_is_enforced():
+    with TestClient(app) as client:
+        statuses = [
+            client.post(
+                "/api/v1/tasks",
+                json={"url": "http://localhost/private", "engine": "auto"},
+            ).status_code
+            for _ in range(6)
+        ]
+    assert statuses[:5] == [400, 400, 400, 400, 400]
+    assert statuses[5] == 429
