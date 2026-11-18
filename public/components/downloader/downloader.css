@@ -62,3 +62,59 @@
 .security-check-wrap[hidden]{display:none!important}
 .security-check-label{color:#8192b4;font-size:8px;font-weight:800;letter-spacing:.13em}
 #turnstile-widget{min-height:0}
+
+
+/* Compact primary action for touch layouts: keep the engine selector wide and use an icon action. */
+@media (max-width: 600px) {
+  .input-controls {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 42px;
+    align-items: end;
+    gap: 10px;
+  }
+  .engine-control {
+    width: 100%;
+    min-width: 0;
+  }
+  #analyse-button {
+    display: grid;
+    place-items: center;
+    flex: 0 0 42px;
+    width: 42px;
+    min-width: 42px;
+    height: 41px;
+    min-height: 41px;
+    padding: 0;
+    gap: 0;
+    border-radius: 12px;
+    font-size: 0;
+    box-shadow: none;
+  }
+  #analyse-button > span:first-child {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+  #analyse-button .action-arrow {
+    width: 17px;
+    height: 17px;
+  }
+}
+@media (max-width: 360px) {
+  .input-controls {
+    grid-template-columns: minmax(0, 1fr) 40px;
+  }
+  #analyse-button {
+    flex-basis: 40px;
+    width: 40px;
+    min-width: 40px;
+    height: 40px;
+    min-height: 40px;
+  }
+}

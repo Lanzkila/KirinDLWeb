@@ -22,31 +22,49 @@ Official references:
 
 Task states: queued, downloading, processing, merging, completed, failed, cancelled. Progress contains video/audio percentages and gallery item counts where available.
 
-## Run locally
+## Run locally without hosting
 
-Requirements: Docker with network access.
+No cloud account or public server is needed for local testing. The website and downloader backend run as two local services on the same computer.
 
-From the repository root:
+Requirements: Node.js 22 or newer, plus either Docker or Python 3.12. Docker is recommended because the image already includes FFmpeg.
+
+### 1. Start the backend
+
+From the repository root, using Docker:
 
     docker build -f server/Dockerfile -t kirindl-web-engine .
     docker run --rm -p 8000:8000 -v kirindl-downloads:/data -e KIRINDL_DATA_DIR=/data kirindl-web-engine
 
-Open http://localhost:8000/api/v1/health. Interactive API documentation is at /docs.
-
-For development without Docker:
+Or run it directly with Python:
 
     python -m venv .venv
     . .venv/bin/activate
     pip install -r server/requirements-dev.txt
     KIRINDL_DATA_DIR=./.downloads uvicorn kirindl_server.main:app --app-dir server --reload
 
+For the Python option, install the FFmpeg executable separately and make sure it is available on PATH if you want video/audio merging.
+
+Check the backend at http://127.0.0.1:8000/api/v1/health. Interactive API documentation is at http://127.0.0.1:8000/docs.
+
+### 2. Start the website
+
+Open a second terminal at the repository root and run:
+
+    npm run dev
+
+Open http://127.0.0.1:4173/preview.html. The local frontend configuration automatically points to http://127.0.0.1:8000, and the backend's default CORS allowlist includes this local development origin. No apiBase edit or hosting setup is needed.
+
 Turnstile is disabled for local development unless KIRINDL_REQUIRE_TURNSTILE=true and a valid sitekey/secret pair is configured.
+
+The local website server binds to loopback, so it is intended for testing on the same computer, not for public access. Real downloads still depend on the source site being supported and reachable from that computer.
 
 ## Configure the website
 
-Edit public/kirindl-config.js and set apiBase to the HTTPS base URL of the deployed backend, with no trailing slash. For a local backend, http://127.0.0.1:8000 is used automatically when the site is opened from localhost. The public config may contain the Turnstile **sitekey**, but never the Turnstile secret or KIRINDL_API_TOKEN.
+- Local preview needs no configuration change: public/kirindl-config.js selects http://127.0.0.1:8000 automatically when the page is opened from localhost or 127.0.0.1.
+- For a public website, set apiBase to the HTTPS base URL of the deployed backend, with no trailing slash.
+- The public config may contain the Cloudflare Turnstile sitekey, but never the Turnstile secret or KIRINDL_API_TOKEN.
 
-The backend must be deployed to a server/container host that supports Python, FFmpeg, a persistent writable volume and outbound HTTPS. The GitHub Pages frontend cannot run yt-dlp, gallery-dl or FFmpeg.
+GitHub Pages and other static hosts cannot run yt-dlp, gallery-dl or FFmpeg. Public live downloading therefore requires a separately deployed backend; this is intentionally outside the local-development steps above.
 
 ## Persistence and worker model
 

@@ -125,10 +125,14 @@ Status: BACKEND AUTOMATED TESTS EXPANDED; PUBLIC DEPLOYMENT AND LIVE ENGINE TEST
 
 ## Current next step
 
-Finish backend deployment preparation and choose a server/container host. Do not proceed to metadata/format inspection or further downloader UI stages until the backend CI passes and a backend instance can be health-checked. After deployment, run real source-site tests for yt-dlp, FFmpeg merging, gallery-dl ZIP output, progress, cancellation and file retention.
+Continue with work that can be completed without public hosting:
 
-Preview source: preview.html
-Raw.githack development URL: https://raw.githack.com/Lanzkila/KirinDLWeb/main/preview.html
+- Finish responsive frontend refinements in the separate KirinDLWeb preview.
+- Use the documented local setup to run the frontend and backend together on one computer.
+- Keep public backend provisioning, public API URL configuration and live remote download validation deferred until the owner chooses to resume hosting work.
+- Do not begin metadata/format inspection or public multi-user rollout until a hosted backend can be health-checked and its network egress controls are verified.
+
+The existing main homepage and Android repository remain unchanged by these web-preview tasks.
 
 ## Update instructions
 
@@ -171,3 +175,10 @@ Raw.githack development URL: https://raw.githack.com/Lanzkila/KirinDLWeb/main/pr
 - GitHub Pages build/deployment: SUCCESS.
 - Deploy KirinDL Web workflow: SUCCESS.
 - No DigitalOcean Droplet or paid cloud resource has been created. Live backend deployment and real-source download validation remain pending the owner's Droplet, DNS domain, SSH source IP and Cloudflare Turnstile keys.
+
+
+### 2026-11-19 — hosting temporarily deferred
+
+- Owner requested that hosting/deployment be skipped for now; do not provision cloud resources or configure a public API endpoint until asked.
+- Local backend and frontend setup remains available through server/README.md and public/kirindl-config.js.
+- Latest pre-change Web CI on main commit `b8a49a3` completed successfully. New responsive UI work is recorded in the next commit; visual verification on a physical phone remains pending.
