@@ -2,11 +2,15 @@
 
 The independent web platform for [KirinDL](https://github.com/Lanzkila/KirinDL).
 
-This repository is intentionally separate from the Android application repository. The web client, browser-specific services, web engine adapters, backend contracts, and App–Web bridge documentation live here.
+This repository is intentionally separate from the Android application repository. The existing KirinDL Sites Pages design has been copied here as a temporary web presentation so it can continue to work independently while the browser downloader is developed.
 
 ## Project status
 
-**Scaffold stage.** This commit establishes the folder layout and a small static web shell. It does not yet download media, run yt-dlp, host a backend, or connect to the Android app. Those integrations will be added and tested in separate steps.
+**Website pages migrated; downloader and bridge are not connected yet.**
+
+The current homepage and informational pages retain the existing KirinDL Pages design. The page source is kept under `pages/`, shared visual assets under `pages-assets/`, and the static build publishes the old page URLs at the repository root. The design can be reworked later without changing the Android app.
+
+The separate browser workspace scaffold remains under `src/` for later development. It is not yet the active homepage.
 
 ## Repository layout
 
@@ -15,18 +19,14 @@ KirinDLWeb/
 ├── .github/workflows/       # CI and GitHub Pages deployment
 ├── docs/                    # Architecture, bridge and development notes
 ├── engine/                  # Web engine contracts and future adapters
-├── modules/                 # Reserved for Git submodules when repos exist
-├── public/                  # Static public assets
-├── scripts/                 # Build helpers
-├── server/                  # Backend service boundaries (not implemented)
-├── src/
-│   ├── app/                 # App entry point and hash router
-│   ├── components/          # Reusable interface components
-│   ├── core/                # Shared data types and protocol contracts
-│   ├── pages/               # Home, download, history, settings and tools
-│   ├── services/            # Browser and app integration adapters
-│   └── styles/              # Global styles
-└── tests/                   # Unit and integration tests
+├── modules/                 # Reserved for future Git submodules
+├── pages/                   # Migrated Contact, Issues, Privacy and Support pages
+├── pages-assets/            # Migrated site CSS, JavaScript and favicon
+├── public/                  # Web platform public assets
+├── scripts/                 # Development server and static build
+├── server/                  # Future backend service boundary
+├── src/                     # Future browser downloader workspace
+└── tests/                   # Unit tests
 ```
 
 ## Local development
@@ -37,7 +37,7 @@ Requirements: Node.js 22 or newer.
 npm run dev
 ```
 
-Then open the local URL printed by the server.
+Open the local URL printed by the server.
 
 Run checks and create the static site build:
 
@@ -46,28 +46,27 @@ npm test
 npm run build
 ```
 
-The distributable website is written to `dist/`.
+The deployable site is written to `dist/`.
 
 ## Modular repository approach
 
-The layout follows the separation principle used by projects such as PipePipe: components can become independently maintained repositories and later be connected as Git submodules. No submodule is declared yet because the future module repositories and their stable URLs have not been created.
+The project follows the separation principle used by projects such as PipePipe: stable components may later become independently maintained repositories and be connected as Git submodules.
 
-See [the modular layout notes](docs/architecture/modules.md).
+No submodule is declared yet because the target module repositories and their stable URLs have not been created. See [the modular layout notes](docs/architecture/modules.md).
 
 ## App–Web integration
 
-The bridge protocol is being designed separately from its transport. The current code contains only a versioned message contract; it does not claim that the Android application is already connected.
+The bridge protocol is still a specification, not a live connection. The Android source and native download engines remain in [Lanzkila/KirinDL](https://github.com/Lanzkila/KirinDL). Any Android changes will be limited to a separately reviewed bridge integration.
 
 See [the bridge protocol](docs/bridge/protocol.md).
 
-## Important boundaries
+## Platform boundaries
 
-- The Android source and native download engines remain in [Lanzkila/KirinDL](https://github.com/Lanzkila/KirinDL).
-- Browser code must not receive Android private storage paths, signing keys, cookies, or other secrets.
-- A browser frontend cannot directly run the Android Kotlin engine.
-- Server-side extraction or processing requires a separately deployed backend and suitable security controls.
-- GitHub Pages can host the static frontend, not a long-running downloader backend.
+- GitHub Pages hosts this static website; it does not run a long-lived downloader backend.
+- Browser code cannot execute the Android Kotlin engine or access Android private storage.
+- Browser-compatible features will run in the browser; tasks needing server resources will require a separately deployed and secured backend or a handoff to the Android app.
+- Do not place API secrets, extractor cookies, signing keys or privileged credentials in the web frontend.
 
-## License
+## Website migration
 
-The web-specific license and attribution policy will be finalized before importing or adapting existing website assets and code.
+The visual design and informational Pages were migrated from the existing KirinDL repository. The source repository was left unchanged. The current presentation is temporary and may be redesigned specifically for the web platform later.
