@@ -13,3 +13,4 @@ class CreateTaskRequest(BaseModel):
 
     url: str = Field(min_length=8, max_length=4096)
     engine: EngineName = "auto"
+    challenge_token: str | None = Field(default=None, max_length=2048)

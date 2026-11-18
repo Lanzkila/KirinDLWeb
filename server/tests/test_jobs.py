@@ -1,7 +1,9 @@
 from __future__ import annotations
 
+import shutil
 import time
 from pathlib import Path
+from types import SimpleNamespace
 
 import pytest
 
@@ -135,5 +137,22 @@ def test_active_task_limit_is_enforced(tmp_path):
         manager.create("https://example.com/one", "yt-dlp")
         with pytest.raises(RuntimeError, match="queue is currently full"):
             manager.create("https://example.com/two", "yt-dlp")
+    finally:
+        manager.close()
+
+
+def test_task_is_rejected_when_storage_reserve_is_too_low(tmp_path, monkeypatch):
+    manager = make_manager(
+        tmp_path,
+        max_download_bytes=10,
+        minimum_free_bytes=5,
+    )
+    use_idle_worker(manager)
+    usage = SimpleNamespace(total=100, used=98, free=2)
+    monkeypatch.setattr(shutil, "disk_usage", lambda _path: usage)
+    try:
+        with pytest.raises(RuntimeError, match="low on free disk space"):
+            manager.create("https://example.com/media", "yt-dlp")
+        assert manager.get("no-such-task") is None
     finally:
         manager.close()

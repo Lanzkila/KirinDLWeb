@@ -149,3 +149,14 @@ Raw.githack development URL: https://raw.githack.com/Lanzkila/KirinDLWeb/main/pr
 - Added backend tests for restart recovery, task retention, output path isolation, queue limits and API request validation.
 - Docker image includes a health check, one-worker startup and non-root execution.
 - Backend remains single-instance; public deployment and live extractor tests are still pending.
+
+
+### Production security and deployment follow-up
+
+- The DigitalOcean starter deployment uses a private Docker bridge with a fixed API address and Caddy as the only published HTTP(S) service.
+- A host-side Docker egress guard blocks API-container connections to host services, private/loopback/link-local/reserved destinations, the rest of the private Compose subnet and other container addresses. Only established replies from API port 8000 back to the Caddy container are allowed.
+- The Cloud Firewall also blocks IPv4 private/shared/local/link-local/reserved ranges and IPv6 local, unique-local, NAT64, 6to4 and special-purpose ranges before permitting DNS/NTP/HTTP/HTTPS egress.
+- The Turnstile hostname allowlist excludes shared preview hosts. Use the account's GitHub Pages hostname or a custom domain under the owner's control; do not trust raw.githack.com as a production challenge hostname.
+- Backend storage checks preserve headroom for the output cap, ZIP packaging and a separate free-space reserve.
+- CI now checks Python and shell syntax, Docker Compose configuration, backend tests, Docker image build and a read-only container health check.
+- Deployment scripts are prepared but not executed against a cloud account. The public backend URL, Droplet ID, operator SSH IP, DNS domain and Turnstile keys are still unconfigured.

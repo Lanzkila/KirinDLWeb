@@ -1,0 +1,76 @@
+services:
+  kirindl-api:
+    build:
+      context: ../..
+      dockerfile: server/Dockerfile
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      PORT: "8000"
+      HOME: /tmp
+      XDG_CACHE_HOME: /tmp/.cache
+      KIRINDL_DATA_DIR: /data
+      KIRINDL_REQUIRE_TURNSTILE: "true"
+      KIRINDL_MAX_WORKERS: "1"
+      KIRINDL_MAX_ACTIVE_TASKS: "1"
+      KIRINDL_MIN_FREE_DISK_BYTES: "1073741824"
+    dns:
+      - 1.1.1.1
+      - 1.0.0.1
+    volumes:
+      - ./data:/data
+    expose:
+      - "8000"
+    networks:
+      kirindl-private:
+        ipv4_address: 172.31.240.3
+    read_only: true
+    tmpfs:
+      - /tmp:rw,noexec,nosuid,size=256m
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    healthcheck:
+      test:
+        - CMD
+        - python
+        - -c
+        - "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/api/v1/health', timeout=3)"
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+
+  caddy:
+    image: caddy:2
+    restart: unless-stopped
+    environment:
+      KIRINDL_API_DOMAIN: "${KIRINDL_API_DOMAIN:?Set KIRINDL_API_DOMAIN in deploy/digitalocean/.env}"
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    networks:
+      kirindl-private:
+        ipv4_address: 172.31.240.2
+    depends_on:
+      kirindl-api:
+        condition: service_healthy
+
+volumes:
+  caddy_data:
+  caddy_config:
+
+networks:
+  kirindl-private:
+    driver: bridge
+    enable_ipv6: false
+    ipam:
+      config:
+        - subnet: 172.31.240.0/24

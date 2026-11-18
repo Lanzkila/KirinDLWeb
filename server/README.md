@@ -29,7 +29,7 @@ Requirements: Docker with network access.
 From the repository root:
 
     docker build -f server/Dockerfile -t kirindl-web-engine .
-    docker run --rm -p 8000:8000 -v kirindl-downloads:/data --env-file server/.env.example kirindl-web-engine
+    docker run --rm -p 8000:8000 -v kirindl-downloads:/data -e KIRINDL_DATA_DIR=/data kirindl-web-engine
 
 Open http://localhost:8000/api/v1/health. Interactive API documentation is at /docs.
 
@@ -40,9 +40,11 @@ For development without Docker:
     pip install -r server/requirements-dev.txt
     KIRINDL_DATA_DIR=./.downloads uvicorn kirindl_server.main:app --app-dir server --reload
 
+Turnstile is disabled for local development unless KIRINDL_REQUIRE_TURNSTILE=true and a valid sitekey/secret pair is configured.
+
 ## Configure the website
 
-Edit public/kirindl-config.js and set apiBase to the HTTPS base URL of the deployed backend, with no trailing slash. For a local backend, http://127.0.0.1:8000 is used automatically when the site is opened from localhost. Never place KIRINDL_API_TOKEN or any server secret in the public frontend.
+Edit public/kirindl-config.js and set apiBase to the HTTPS base URL of the deployed backend, with no trailing slash. For a local backend, http://127.0.0.1:8000 is used automatically when the site is opened from localhost. The public config may contain the Turnstile **sitekey**, but never the Turnstile secret or KIRINDL_API_TOKEN.
 
 The backend must be deployed to a server/container host that supports Python, FFmpeg, a persistent writable volume and outbound HTTPS. The GitHub Pages frontend cannot run yt-dlp, gallery-dl or FFmpeg.
 
@@ -54,19 +56,23 @@ The backend must be deployed to a server/container host that supports Python, FF
 - A task interrupted by a server restart is restored as failed with a clear retry message. Extractor processes are not resumed.
 - Retention cleanup runs periodically (default: every 300 seconds) and removes expired task rows and their output directories (default retention: 24 hours).
 - The worker pool is bounded (default: 2 workers) and the active-task cap defaults to 3.
+- A free-space guard runs before accepting a task and during extractor progress. It preserves enough headroom for the output cap, temporary archive packaging and the configured reserve.
 - SQLite persistence does not make the worker pool distributed. Run exactly one Uvicorn worker and one backend replica. Add a distributed queue/worker service before horizontal scaling.
 
 ## Security and operating limits
 
-- Only HTTP and HTTPS source URLs are accepted. URLs with credentials, local/private/reserved IP targets, and non-standard ports are rejected.
+- Only HTTP and HTTPS source URLs are accepted. URLs with credentials, local/private/reserved DNS answers and non-standard ports are rejected.
 - CORS is restricted to configured frontend origins.
-- Task creation is rate-limited per client; concurrent tasks, runtime and download size are capped.
+- Task creation is rate-limited per client; concurrent tasks, runtime, output size and minimum free disk space are capped.
 - Optional KIRINDL_API_TOKEN support is intended for private deployments or a trusted gateway. Do not ship a static shared token to a public browser.
-- DNS checks are a first-line SSRF guard only. Before public exposure, enforce outbound network egress rules at the hosting/network layer to block loopback, private, link-local and metadata-service destinations after redirects and secondary extractor requests as well. Do not treat DNS validation alone as complete SSRF protection.
-- The public API has no per-user account system or task ownership yet. Deploy behind appropriate abuse controls and do not enable untrusted public traffic until egress and rate-limit behavior have been validated for the host.
-- Use persistent storage; ephemeral container storage will lose completed output files and task history when the host replaces the container.
+- Cloudflare Turnstile can be enabled with KIRINDL_REQUIRE_TURNSTILE=true and a server-side KIRINDL_TURNSTILE_SECRET. Every task-creation token is checked with Siteverify and the expected hostname and action. The browser sitekey is public; the secret must stay on the server.
+- DNS checks are a first-line SSRF guard only. Before public exposure, enforce outbound network egress rules at the hosting/network layer to block loopback, private, link-local and metadata-service destinations after redirects and secondary extractor requests as well.
+- The public API has no per-user account system or task ownership yet. Deploy behind abuse controls; do not expose untrusted traffic until egress and rate limits are validated.
+- Use persistent storage; ephemeral container storage loses task history and output files when the host replaces the container.
 - Respect source-site terms and copyright rules. Only download media you are authorised to access.
 
 ## Current status
 
-The backend code and automated tests are implemented, including SQLite task persistence and retention cleanup. No public backend instance has been deployed because no hosting target has been configured. Live source-site downloads, FFmpeg merging and gallery ZIP output still require host deployment and real-source validation.
+The backend code, persistent task manager, Turnstile verifier, storage guard and automated tests are implemented. The DigitalOcean deployment files are prepared, but no public backend instance has been provisioned or deployed. Live source-site downloads, FFmpeg merging and gallery ZIP output still require a real hosted instance and source validation.
+
+See [DigitalOcean deployment](../deploy/digitalocean/README.md).

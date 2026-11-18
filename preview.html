@@ -13,6 +13,7 @@
   <link rel="stylesheet" href="public/components/footer/footer.css">
   <link rel="stylesheet" href="public/components/downloader/downloader.css">
   <script src="public/kirindl-config.js"></script>
+  <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit" defer></script>
   <script type="module" src="public/kirindl-preview.js"></script>
 </head>
 <body>
@@ -88,6 +89,10 @@
                 </div>
               </div>
               <button class="analyse-button" id="analyse-button" type="submit"><span>Start download</span><svg class="action-arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg></button>
+            </div>
+            <div class="security-check-wrap" id="security-check-wrap" hidden>
+              <span class="security-check-label">SECURITY CHECK</span>
+              <div id="turnstile-widget"></div>
             </div>
             <p class="form-feedback" id="form-feedback" role="status" aria-live="polite">Paste a link, choose an engine and start your download.</p>
           </form>

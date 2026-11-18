@@ -18,6 +18,10 @@ class TaskCancelled(Exception):
     pass
 
 
+class TaskStorageError(RuntimeError):
+    """Raised when a new task would risk exhausting persistent storage."""
+
+
 class TaskManager:
     """SQLite-backed task registry with a bounded, single-process worker pool.
 
@@ -42,13 +46,14 @@ class TaskManager:
         task_timeout_seconds: int = 3600,
         retention_seconds: int = 24 * 60 * 60,
         cleanup_interval_seconds: int = 300,
+        minimum_free_bytes: int = 512 * 1024 * 1024,
     ) -> None:
         if max_workers < 1 or max_active_tasks < 1:
             raise ValueError("Worker and active-task limits must be positive.")
         if max_download_bytes < 1 or task_timeout_seconds < 1:
             raise ValueError("Download size and timeout limits must be positive.")
-        if retention_seconds < 1 or cleanup_interval_seconds < 1:
-            raise ValueError("Retention and cleanup intervals must be positive.")
+        if retention_seconds < 1 or cleanup_interval_seconds < 1 or minimum_free_bytes < 0:
+            raise ValueError("Retention, cleanup and storage-reserve settings are invalid.")
 
         self.data_dir = Path(data_dir).resolve()
         self.data_dir.mkdir(parents=True, exist_ok=True)
@@ -58,6 +63,7 @@ class TaskManager:
         self.task_timeout_seconds = task_timeout_seconds
         self.retention_seconds = retention_seconds
         self.cleanup_interval_seconds = cleanup_interval_seconds
+        self.minimum_free_bytes = minimum_free_bytes
         self._lock = threading.RLock()
         self._jobs: dict[str, dict[str, Any]] = {}
         self._stop_cleanup = threading.Event()
@@ -158,9 +164,23 @@ class TaskManager:
                     self._persist(job)
         self._executor.shutdown(wait=False, cancel_futures=True)
 
+    def _ensure_storage_space(self) -> None:
+        # Gallery ZIP packaging temporarily coexists with the source files.
+        # Keep enough headroom for the configured output cap plus a reserve.
+        required_free = (self.max_download_bytes * 2) + self.minimum_free_bytes
+        try:
+            free_bytes = shutil.disk_usage(self.data_dir).free
+        except OSError as exc:
+            raise TaskStorageError("The backend storage volume is unavailable.") from exc
+        if free_bytes < required_free:
+            raise TaskStorageError(
+                "The backend is low on free disk space. Older downloads must expire before another task can start."
+            )
+
     def create(self, url: str, engine: str) -> dict[str, Any]:
         with self._lock:
             self._prune_expired()
+            self._ensure_storage_space()
             active = sum(1 for job in self._jobs.values() if job["status"] in self.ACTIVE_STATES)
             if active >= self.max_active_tasks:
                 raise RuntimeError("The download queue is currently full. Try again later.")
@@ -304,7 +324,7 @@ class TaskManager:
                 self._update(task_id, engine="yt-dlp")
                 try:
                     self._run_yt_dlp(task_id, started)
-                except TaskCancelled:
+                except (TaskCancelled, TaskStorageError):
                     raise
                 except Exception:
                     if requested_engine != "auto":
@@ -378,6 +398,7 @@ class TaskManager:
 
         def progress_hook(event: dict[str, Any]) -> None:
             manager._check_cancelled(task_id)
+            manager._ensure_storage_space()
             if time.monotonic() - started > manager.task_timeout_seconds:
                 raise TimeoutError("The download exceeded the configured time limit.")
             status = event.get("status")
@@ -480,6 +501,7 @@ class TaskManager:
             try:
                 while process.poll() is None:
                     self._check_cancelled(task_id)
+                    self._ensure_storage_space()
                     if time.monotonic() - started > self.task_timeout_seconds:
                         raise TimeoutError("The gallery download exceeded the configured time limit.")
                     files = self._find_output_files(task_id)

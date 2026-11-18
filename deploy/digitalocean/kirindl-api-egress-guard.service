@@ -1,0 +1,13 @@
+[Unit]
+Description=KirinDL API container egress isolation
+Requires=docker.service
+After=docker.service
+PartOf=docker.service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/sbin/kirindl-api-egress-guard
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target

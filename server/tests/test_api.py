@@ -67,3 +67,44 @@ def test_download_missing_task_returns_conflict():
     with TestClient(app) as client:
         response = client.get("/api/v1/tasks/not-a-real-task/download")
     assert response.status_code == 409
+
+
+def test_task_creation_requires_turnstile_when_enabled(monkeypatch):
+    from kirindl_server import main
+
+    monkeypatch.setattr(main, "TURNSTILE_REQUIRED", True)
+    monkeypatch.setattr(main, "TURNSTILE_SECRET", "")
+    with TestClient(app) as client:
+        response = client.post(
+            "/api/v1/tasks",
+            json={"url": "https://example.com/media", "engine": "auto"},
+        )
+    assert response.status_code == 503
+    assert "not configured" in response.json()["detail"]
+
+
+def test_task_creation_rejects_missing_token_when_turnstile_is_configured(monkeypatch):
+    from kirindl_server import main
+
+    monkeypatch.setattr(main, "TURNSTILE_REQUIRED", True)
+    monkeypatch.setattr(main, "TURNSTILE_SECRET", "test-secret")
+    with TestClient(app) as client:
+        response = client.post(
+            "/api/v1/tasks",
+            json={"url": "https://example.com/media", "engine": "auto"},
+        )
+    assert response.status_code == 400
+    assert "security check" in response.json()["detail"]
+
+
+def test_challenge_token_has_a_strict_maximum_length():
+    with TestClient(app) as client:
+        response = client.post(
+            "/api/v1/tasks",
+            json={
+                "url": "https://example.com/media",
+                "engine": "auto",
+                "challenge_token": "x" * 2049,
+            },
+        )
+    assert response.status_code == 422

@@ -38,8 +38,15 @@ const clearButton = document.querySelector("#clear-link");
 const cancelButton = document.querySelector("#cancel-demo");
 const resetButton = document.querySelector("#reset-task");
 const taskNavLinks = document.querySelectorAll(".task-nav-link");
+const securityCheckWrap = document.querySelector("#security-check-wrap");
+const turnstileContainer = document.querySelector("#turnstile-widget");
 const originalSubmitMarkup = submitButton?.innerHTML || "";
 const apiBase = String(window.KIRINDL_CONFIG?.apiBase || "").replace(/\/+$/, "");
+const turnstileSiteKey = String(window.KIRINDL_CONFIG?.turnstileSiteKey || "").trim();
+let turnstileWidgetId = null;
+let turnstileToken = "";
+let turnstileWaiters = [];
+let challengePending = false;
 let activeTaskId = null;
 let taskRunId = 0;
 let taskRunning = false;
@@ -49,6 +56,64 @@ function setMessage(message, type = "") {
   if (!feedback) return;
   feedback.textContent = message;
   feedback.className = "form-feedback" + (type ? " " + type : "");
+}
+function settleTurnstileWaiters(error, token = "") {
+  const waiters = turnstileWaiters.splice(0);
+  waiters.forEach((waiter) => {
+    window.clearTimeout(waiter.timer);
+    if (error) waiter.reject(error);
+    else waiter.resolve(token);
+  });
+}
+function initialiseTurnstile() {
+  if (!turnstileSiteKey) return;
+  if (!window.turnstile || !turnstileContainer || !securityCheckWrap) {
+    throw new Error("Cloudflare security check could not load. Reload the page and try again.");
+  }
+  securityCheckWrap.hidden = false;
+  if (turnstileWidgetId !== null) return;
+  turnstileWidgetId = window.turnstile.render(turnstileContainer, {
+    sitekey: turnstileSiteKey,
+    action: "download",
+    theme: "dark",
+    size: "compact",
+    callback: (token) => {
+      turnstileToken = token;
+      settleTurnstileWaiters(null, token);
+    },
+    "expired-callback": () => {
+      turnstileToken = "";
+      settleTurnstileWaiters(new Error("Security check expired. Complete it again."));
+    },
+    "error-callback": () => {
+      turnstileToken = "";
+      settleTurnstileWaiters(new Error("Cloudflare security check failed to load. Try again."));
+    }
+  });
+}
+function acquireTurnstileToken() {
+  if (!turnstileSiteKey) return Promise.resolve("");
+  try {
+    initialiseTurnstile();
+  } catch (error) {
+    return Promise.reject(error);
+  }
+  if (turnstileToken) return Promise.resolve(turnstileToken);
+  setMessage("Complete the Cloudflare security check before starting the download.", "is-info");
+  return new Promise((resolve, reject) => {
+    const waiter = { resolve, reject, timer: null };
+    waiter.timer = window.setTimeout(() => {
+      turnstileWaiters = turnstileWaiters.filter((entry) => entry !== waiter);
+      reject(new Error("Security check timed out. Complete the check and try again."));
+    }, 120000);
+    turnstileWaiters.push(waiter);
+  });
+}
+function resetTurnstile() {
+  turnstileToken = "";
+  if (turnstileWidgetId !== null && window.turnstile) {
+    window.turnstile.reset(turnstileWidgetId);
+  }
 }
 function setStage(step, status, className = "") {
   const statusNode = step === "processing" ? processingStatus : mergingStatus;
@@ -237,7 +302,7 @@ async function pollTask(taskId, runId) {
     await new Promise((resolve) => window.setTimeout(resolve, 1000));
   }
 }
-async function startTask(url, engine) {
+async function startTask(url, engine, challengeToken = "") {
   if (!apiBase) {
     setMessage("Backend belum dikonfigurasi. Jalankan KirinDL Web Engine dan tetapkan apiBase dalam public/kirindl-config.js.", "is-error");
     return;
@@ -263,14 +328,16 @@ async function startTask(url, engine) {
   try {
     const task = await apiRequest("/api/v1/tasks", {
       method: "POST",
-      body: JSON.stringify({ url, engine })
+      body: JSON.stringify({ url, engine, challenge_token: challengeToken || null })
     });
+    resetTurnstile();
     if (runId !== taskRunId) return;
     activeTaskId = task.id;
     updateTaskView(task);
     submitButton.textContent = "Downloading…";
     await pollTask(task.id, runId);
   } catch (error) {
+    resetTurnstile();
     if (runId !== taskRunId) return;
     taskRunning = false;
     mediaInput.disabled = false;
@@ -310,7 +377,7 @@ clearButton?.addEventListener("click", () => {
 });
 form?.addEventListener("submit", async (event) => {
   event.preventDefault();
-  if (taskRunning) return;
+  if (taskRunning || challengePending) return;
   const value = mediaInput.value.trim();
   if (!value) {
     setMessage("Enter a media URL first.", "is-error");
@@ -323,7 +390,18 @@ form?.addEventListener("submit", async (event) => {
     mediaInput.focus();
     return;
   }
-  await startTask(parsed.href, engineSelect.value);
+  challengePending = true;
+  submitButton.disabled = true;
+  try {
+    const challengeToken = await acquireTurnstileToken();
+    challengePending = false;
+    submitButton.disabled = false;
+    await startTask(parsed.href, engineSelect.value, challengeToken);
+  } catch (error) {
+    challengePending = false;
+    submitButton.disabled = false;
+    setMessage(error.message, "is-error");
+  }
 });
 cancelButton?.addEventListener("click", async () => {
   const id = activeTaskId;
@@ -346,3 +424,11 @@ openReadyLink?.addEventListener("click", () => {
   window.setTimeout(() => resetToInput(true), 1500);
 });
 resetButton?.addEventListener("click", () => resetToInput(false));
+
+if (turnstileSiteKey) {
+  try {
+    initialiseTurnstile();
+  } catch (error) {
+    setMessage(error.message, "is-error");
+  }
+}

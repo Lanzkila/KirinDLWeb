@@ -1,0 +1,3 @@
+# Local deployment secrets and downloader output must never be committed.
+.env
+data/
