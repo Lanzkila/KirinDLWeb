@@ -40,7 +40,8 @@ function openMenu() {
 menuButton?.addEventListener("click", () => menuPanel.hidden ? openMenu() : closeMenu());
 document.addEventListener("click", (event) => {
   const pageLink = event.target.closest("[data-page-link]");
-  if (pageLink) { rememberPage(pageLink); closeMenu(); }
+  if (pageLink) rememberPage(pageLink);
+  if (event.target.closest(".menu-links a, [data-resume-link]")) closeMenu();
   if (menuPanel && !menuPanel.hidden && !event.target.closest(".menu-wrap")) closeMenu();
 });
 resumeLink?.addEventListener("click", closeMenu);

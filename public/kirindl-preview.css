@@ -147,3 +147,11 @@
 @media (prefers-reduced-motion: reduce) {
   .process-step.is-active .step-symbol { animation: none; }
 }
+
+
+/* Keep the navigation popover centred during its entrance animation too. */
+.menu-panel { animation: menu-in-center .18s ease-out; }
+@keyframes menu-in-center {
+  from { opacity: 0; transform: translate(-50%, -7px) scale(.99); }
+  to { opacity: 1; transform: translate(-50%, 0) scale(1); }
+}

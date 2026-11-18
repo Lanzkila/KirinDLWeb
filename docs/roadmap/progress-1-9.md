@@ -153,3 +153,12 @@ Part 1 implementation commit: 233d629cc078823f76c0aabd3e2f3d0106b1a84a
 3. Record commit IDs and CI/deployment results.
 4. Keep incomplete work clearly marked partial or not started.
 5. Preserve repository separation and the decisions above.
+
+
+### Part 1 follow-up — centered account menus and temporary task flow
+
+- Updated the preview so Home initially shows only the URL input card.
+- Centered the hamburger popover and Login/Register dialog on both phone and laptop viewports.
+- Replaced account glyphs with Material 3 style inline SVG icons for the account action, Login and Register tabs.
+- Added a front-end demonstration flow: valid URL submission shows Video/Audio percentages, then Processing and Merging; the progress panel is replaced by a temporary Downloads handoff card containing the submitted URL; the UI then resets to the input-only view.
+- These are simulated UI states only; a live downloader, file output, extraction API and authentication service are not implemented.

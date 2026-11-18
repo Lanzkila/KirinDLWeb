@@ -118,3 +118,14 @@ placeholder telah diwujudkan.
 - Deploy run: https://github.com/Lanzkila/KirinDLWeb/actions/runs/44322945645
 - Pages run: https://github.com/Lanzkila/KirinDLWeb/actions/runs/44322945030
 - Visual review on desktop/mobile is still pending user feedback.
+
+
+9. PART 1 FOLLOW-UP — CENTRED MENUS AND AUTO-RESET FLOW
+------------------------------------------------------
+- Login/Register entry and tabs use Material 3 style inline SVG icons.
+- Hamburger popover is viewport-centred on desktop and mobile; account dialog is centred on both sizes.
+- Home hides the hero, progress, Downloads, preview notice and footer; the input card is the only main content.
+- Valid submit opens simulated Video/Audio progress, Processing and Merging steps.
+- When the demo completes, the progress panel is replaced by a temporary Downloads handoff card showing the submitted source URL.
+- The handoff card auto-closes and clears the input, restoring the initial input-only view.
+- This remains a front-end demonstration. It does not download a file or analyse/extract media.
