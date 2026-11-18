@@ -9,13 +9,13 @@ from kirindl_server.jobs import TaskManager
 
 
 def make_manager(path: Path, **kwargs) -> TaskManager:
-    return TaskManager(
-        data_dir=path,
-        max_workers=1,
-        max_active_tasks=3,
-        cleanup_interval_seconds=3600,
-        **kwargs,
-    )
+    options = {
+        "max_workers": 1,
+        "max_active_tasks": 3,
+        "cleanup_interval_seconds": 3600,
+    }
+    options.update(kwargs)
+    return TaskManager(data_dir=path, **options)
 
 
 def use_idle_worker(manager: TaskManager) -> None:

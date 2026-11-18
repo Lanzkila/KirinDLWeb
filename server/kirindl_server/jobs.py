@@ -9,8 +9,9 @@ import time
 import uuid
 import zipfile
 from concurrent.futures import Future, ThreadPoolExecutor
+from contextlib import contextmanager
 from pathlib import Path
-from typing import Any
+from typing import Any, Iterator
 
 
 class TaskCancelled(Exception):
@@ -72,11 +73,19 @@ class TaskManager:
         )
         self._cleanup_thread.start()
 
-    def _connect(self) -> sqlite3.Connection:
+    @contextmanager
+    def _connect(self) -> Iterator[sqlite3.Connection]:
         connection = sqlite3.connect(self.database_path, timeout=15)
         connection.row_factory = sqlite3.Row
         connection.execute("PRAGMA busy_timeout=15000")
-        return connection
+        try:
+            yield connection
+            connection.commit()
+        except BaseException:
+            connection.rollback()
+            raise
+        finally:
+            connection.close()
 
     def _initialize_database(self) -> None:
         with self._connect() as connection:
@@ -134,8 +143,6 @@ class TaskManager:
                     self._jobs[job["id"]] = job
                     self._persist(job)
                 except (KeyError, TypeError, ValueError, OSError, sqlite3.Error):
-                    # A malformed record must not prevent the remaining queue
-                    # from loading. It will be removed by retention cleanup.
                     continue
 
     def close(self) -> None:
@@ -540,8 +547,6 @@ class TaskManager:
                 with self._lock:
                     self._prune_expired()
             except (OSError, sqlite3.Error):
-                # A transient filesystem/database error should not kill the
-                # cleanup thread; the next interval will retry.
                 continue
 
     def _prune_expired(self) -> None:
