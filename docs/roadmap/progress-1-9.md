@@ -184,3 +184,12 @@ Part 1 implementation commit: 233d629cc078823f76c0aabd3e2f3d0106b1a84a
 - Added a local API config file. Localhost previews target http://127.0.0.1:8000; hosted previews remain disconnected until a backend HTTPS URL is set.
 - Implemented FastAPI service, yt-dlp and gallery-dl adapters, task manager, Dockerfile, dependencies, API tests and URL safety tests.
 - CI now runs Python backend tests. The backend has not yet been deployed publicly, and real downloads still need host-specific live validation.
+
+
+### Engine verification notes
+
+- Frontend no longer animates synthetic progress. It submits tasks to the configured backend and polls server-reported state.
+- Backend Python tests passed in GitHub Actions: URL safety cases and the API health endpoint.
+- GitHub Pages build/deployment passed for the engine commit.
+- No public backend has been deployed, so actual site extraction, FFmpeg merging and downloaded output have not yet been tested against live source URLs.
+- Detailed metadata/format analysis, durable queue/database, user accounts and backend deployment remain outstanding.

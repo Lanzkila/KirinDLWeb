@@ -3,7 +3,7 @@ KIRINDL WEB — WEBSITE REDESIGN PLAN
 
 Repository: Lanzkila/KirinDLWeb
 Related roadmap: docs/roadmap/progress-1-9.md
-Status: PART 1 INTERACTION PREVIEW UPDATED — REAL DOWNLOADER NOT CONNECTED
+Status: FRONTEND WIRED TO IMPLEMENTED BACKEND API — PUBLIC BACKEND DEPLOYMENT PENDING
 
 1. MAIN OBJECTIVE
 -----------------
@@ -99,8 +99,9 @@ Preview:
 - Migrasi Sites Pages: COMPLETE.
 - Asas aplikasi web: PARTIAL / SCAFFOLD.
 - Part 1 UI preview: IMPLEMENTED; awaiting visual review.
-- Downloader web sebenar / metadata extraction: NOT STARTED.
-- Backend dan task API: NOT STARTED.
+- Downloader backend API and yt-dlp/gallery-dl task adapters: IMPLEMENTED; public deployment pending.
+- Dedicated metadata/format-inspection endpoint: NOT STARTED.
+- Backend dan task API: IMPLEMENTED; not publicly deployed.
 - Authentication: UI preview only; backend not started.
 - App–Web bridge: SPECIFICATION ONLY.
 
@@ -155,3 +156,13 @@ placeholder telah diwujudkan.
 - Implemented yt-dlp video/audio downloads with progress hooks and FFmpeg merging, plus gallery-dl gallery downloads with multi-file ZIP output.
 - Added URL input validation, DNS private-network rejection, CORS allowlist, request rate limiting, task concurrency/runtime/size caps, Docker runtime and backend tests.
 - The backend service is implemented but not hosted yet. Configure public/kirindl-config.js apiBase to a deployed HTTPS endpoint before using the public website for live downloads.
+
+
+12. ENGINE / DEPLOYMENT LIMITS
+------------------------------
+- Backend code is in server/kirindl_server/ and can be run through Docker or a Python virtual environment.
+- The website frontend only communicates with the backend over HTTP(S); it does not execute Python or FFmpeg in the browser.
+- GitHub Pages and Raw.githack are static preview hosts. They do not run the downloader backend.
+- public/kirindl-config.js defaults to localhost during local development and remains blank on hosted preview until an HTTPS backend base URL is configured.
+- The backend API has passed automated tests, but real source-site downloads, FFmpeg merges, and gallery ZIP outputs still require live validation after a backend host is deployed.
+- Current backend state uses one in-memory task manager and one Uvicorn worker. Durable queue, multi-instance scaling, account authentication and metadata/format selection remain future work.
