@@ -115,7 +115,7 @@ There is no .gitmodules file and no submodule is connected.
 
 ### 9. Testing, security review, and production deployment
 
-Status: INITIAL CI/PAGES PIPELINE PASSED; PART 1 BUILD VALIDATION PENDING
+Status: PART 1 CI AND PAGES DEPLOYMENT PASSED; VISUAL REVIEW PENDING
 
 Already present:
 - GitHub Actions CI runs the current unit tests and static build.
@@ -142,6 +142,7 @@ Open the Part 1 preview and review the header, navigation, input form, progress 
 
 Preview source: preview.html
 Raw.githack development URL: https://raw.githack.com/Lanzkila/KirinDLWeb/main/preview.html
+Part 1 implementation commit: 233d629cc078823f76c0aabd3e2f3d0106b1a84a
 
 ## Update instructions
 
