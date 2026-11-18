@@ -129,3 +129,16 @@ placeholder telah diwujudkan.
 - When the demo completes, the progress panel is replaced by a temporary Downloads handoff card showing the submitted source URL.
 - The handoff card auto-closes and clears the input, restoring the initial input-only view.
 - This remains a front-end demonstration. It does not download a file or analyse/extract media.
+
+
+10. PART 1 FOLLOW-UP — SVG ARROWS, FOOTER AND COMPONENT FOLDERS
+--------------------------------------------------------------
+- Added folders under public/components/: hamburger/, login-register/, footer/ and downloader/.
+- Hamburger folder owns menu CSS and Remember Last Page JavaScript.
+- Login-register folder owns dialog styles and Login/Register interactions.
+- Footer folder owns the restored responsive footer styles.
+- Downloader folder owns the URL/progress/download handoff styles and JavaScript.
+- Replaced hamburger/menu navigation arrows with inline SVG icons and centered their alignment/rotation.
+- Restored the footer on desktop and mobile.
+- Mobile header displays icon-only hamburger and account buttons with no visible text labels.
+- CI now checks syntax for the preview entry point and each component script.

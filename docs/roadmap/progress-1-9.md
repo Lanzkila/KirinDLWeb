@@ -162,3 +162,13 @@ Part 1 implementation commit: 233d629cc078823f76c0aabd3e2f3d0106b1a84a
 - Replaced account glyphs with Material 3 style inline SVG icons for the account action, Login and Register tabs.
 - Added a front-end demonstration flow: valid URL submission shows Video/Audio percentages, then Processing and Merging; the progress panel is replaced by a temporary Downloads handoff card containing the submitted URL; the UI then resets to the input-only view.
 - These are simulated UI states only; a live downloader, file output, extraction API and authentication service are not implemented.
+
+
+### Part 1 follow-up — SVG navigation, restored footer and component folders
+
+- Split preview UI into dedicated directories under public/components/: hamburger, login-register, footer and downloader.
+- Each interactive component has its own JavaScript file; component-specific CSS is stored beside it.
+- Replaced navigation arrows in hamburger menus with inline SVG paths; chevrons rotate around their own center.
+- Restored the footer for both desktop and mobile layouts.
+- On phones, hamburger and account buttons show icons only; accessible aria-labels retain their meaning.
+- The production homepage and Android repository remain unchanged.
