@@ -1,73 +1,67 @@
 # KirinDL Web
 
-The independent web platform for KirinDL.
-
-This repository is separate from the Android application repository. The existing KirinDL Sites Pages design remains the temporary production homepage while the web-specific downloader interface is reviewed.
+The independent web platform for KirinDL. This repository remains separate from the Android application repository.
 
 ## Project status
 
-Existing information pages migrated; Part 1 web interface preview created; downloader and bridge are not connected yet.
+The migrated information pages remain available. A web-specific downloader preview is in preview.html. The web engine API has been implemented in server/ but has not yet been deployed to a public backend host.
 
-The migrated Contact, Issues, Privacy and Support pages remain available. The new Part 1 layout is in preview.html, with styles and interactions under public/.
-
-- Part 1 source preview: preview.html
-- Raw.githack development preview: https://raw.githack.com/Lanzkila/KirinDLWeb/main/preview.html
+- Part 1 preview: https://raw.githack.com/Lanzkila/KirinDLWeb/main/preview.html
 - Web redesign plan: docs/roadmap/web-redesign-plan.txt
-- Verified progress 1–9 roadmap: docs/roadmap/progress-1-9.md
+- Progress 1–9: docs/roadmap/progress-1-9.md
+- Backend API and run guide: server/README.md
 
-The preview includes a hamburger menu with Remember Last Page, centered Login/Register dialog with Material 3 SVG icons, a glowing URL input and engine selector. Home initially shows only the input card. Submitting a valid link triggers a simulated Video/Audio 0–100% sequence, Processing and Merging, then temporarily hands the source URL to a Downloads result card before returning to the input-only view. This is UI simulation only; no media extraction, real download, authentication or Android bridge is connected yet.
+The web UI now submits tasks to a real backend API when apiBase is configured. It no longer simulates download progress. On a hosted Pages preview with no API configured, it displays a clear backend-not-configured message.
 
 ## Repository layout
 
     KirinDLWeb/
-    ├── .github/workflows/       CI and GitHub Pages deployment
     ├── docs/                    Architecture, bridge and development notes
-    ├── engine/                  Web engine contracts and future adapters
-    ├── modules/                 Reserved for future Git submodules
+    ├── engine/                  Web engine contracts and adapters map
     ├── pages/                   Migrated information pages
     ├── pages-assets/            Migrated site assets
-    ├── preview.html             Part 1 web-specific UI preview
-    ├── public/                  Web platform public assets
+    ├── preview.html             Web-specific downloader preview
+    ├── public/                  Frontend modules and public config
+    ├── server/                  FastAPI backend, yt-dlp and gallery-dl adapters
     ├── scripts/                 Development server and static build
-    ├── server/                  Future backend service boundary
-    ├── src/                     Browser workspace scaffold
-    └── tests/                   Unit tests
+    └── tests/                   Frontend unit tests
 
 ## Local development
 
-Requirements: Node.js 22 or newer.
+Requirements: Node.js 22+ and Python 3.12+ (or Docker).
+
+Start the frontend:
 
     npm run dev
 
-Open the local URL printed by the server. The Part 1 preview is available at /preview.html.
-
-Run checks and create the static site build:
+Build/test the frontend:
 
     npm test
     npm run build
 
-The deployable site is written to dist/.
+Start the backend locally:
 
-## Modular repository approach
+    python -m venv .venv
+    . .venv/bin/activate
+    pip install -r server/requirements-dev.txt
+    KIRINDL_DATA_DIR=./.downloads uvicorn kirindl_server.main:app --app-dir server --reload
 
-The project follows the separation principle used by projects such as PipePipe: stable components may later become independently maintained repositories and be connected as Git submodules.
+Or use Docker from the repository root:
 
-No submodule is declared yet because the target module repositories and their stable URLs have not been created. See docs/architecture/modules.md.
+    docker build -f server/Dockerfile -t kirindl-web-engine .
+    docker run --rm -p 8000:8000 -v kirindl-downloads:/data --env-file server/.env.example kirindl-web-engine
 
-## App–Web integration
+For local preview, public/kirindl-config.js defaults to the local backend URL. For production, set apiBase there to the HTTPS URL of the deployed backend.
 
-The bridge protocol is still a specification, not a live connection. The Android source and native download engines remain in Lanzkila/KirinDL. Any Android changes will be limited to a separately reviewed bridge integration.
+## Backend capabilities and boundaries
 
-See docs/bridge/protocol.md.
+- yt-dlp handles supported video/audio media.
+- gallery-dl handles supported image galleries and packages multiple outputs into ZIP.
+- FFmpeg is installed in the backend Docker image for media merging.
+- The backend exposes task creation, status, cancellation and file download endpoints.
+- GitHub Pages only serves static frontend content. It cannot run yt-dlp, gallery-dl or FFmpeg.
+- The backend is implemented but has not been deployed to a public server. Public live downloads will not work until a backend host is configured.
+- Never put the server API token, cookies or other secrets in frontend JavaScript.
+- The Android repository is untouched; this web engine is an independent runtime.
 
-## Platform boundaries
-
-- GitHub Pages hosts this static website; it does not run a long-lived downloader backend.
-- Browser code cannot execute the Android Kotlin engine or access Android private storage.
-- Browser-compatible features will run in the browser; tasks needing server resources require a separately deployed and secured backend or handoff to the Android app.
-- Do not place API secrets, extractor cookies, signing keys or privileged credentials in the web frontend.
-- Login/Register in the Part 1 preview is a visual prototype. Do not use real credentials.
-
-## Website migration
-
-The informational Pages were migrated from the existing KirinDL repository. The Android source repository was left unchanged. The current published homepage is temporary and will only be replaced after the new web-specific preview is reviewed.
+See server/README.md for security limits and deployment notes.

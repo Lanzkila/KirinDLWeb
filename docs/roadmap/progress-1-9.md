@@ -45,7 +45,7 @@ Status: PARTIAL / SCAFFOLD + PART 1 UI PREVIEW
 
 ### 3. Build the real web downloader workflow
 
-Status: NOT STARTED
+Status: PARTIAL — TASK API AND DOWNLOAD FLOW IMPLEMENTED; PUBLIC BACKEND NOT DEPLOYED
 
 Target workflow:
 - Accept and validate a media URL.
@@ -54,18 +54,18 @@ Target workflow:
 - Let the user configure and submit a task.
 - Show useful errors and unsupported-site messages.
 
-The Part 1 preview includes an enabled URL field and basic http/https syntax validation only. It does not fetch media information or download anything.
+The frontend now submits real tasks to the backend when apiBase is configured, polls task progress, and exposes the completed output file. The hosted preview has no public backend configured yet, so live download execution is not available from GitHub Pages at this stage.
 
 ### 4. Implement browser/web extraction and processing adapters
 
-Status: NOT STARTED
+Status: PARTIAL — SERVER-SIDE yt-dlp AND gallery-dl ADAPTERS IMPLEMENTED
 
 - Define a web-compatible extractor/metadata adapter boundary under engine/.
 - Determine which tasks can run in the browser and which need a backend.
 - Do not assume Android Kotlin engine, Android storage integrations or packaged native binaries can run in a normal browser.
 - Check licensing and runtime compatibility before importing extractor code.
 
-The engine files are documentation placeholders only; no extractor or processor is implemented.
+The backend adapters live in server/kirindl_server/jobs.py. yt-dlp handles supported video/audio sources and progress hooks; gallery-dl handles supported galleries and file counting. FFmpeg is installed in the backend Docker image for merging. Live source-site testing is still required after deployment.
 
 ### 5. Add task queue, progress, history, and settings persistence
 
@@ -81,14 +81,14 @@ The Part 1 preview now demonstrates a temporary progress panel and a temporary D
 
 ### 6. Define and deploy a secure backend where required
 
-Status: NOT STARTED
+Status: PARTIAL — API AND CONTAINER IMPLEMENTED; NOT PUBLICLY DEPLOYED
 
 - Decide whether web extraction requires server-side execution.
 - Define authenticated APIs, queue/job isolation, timeouts, rate limits, resource limits, cleanup and abuse controls.
 - Keep secrets, cookies, signing keys and privileged credentials out of the browser and GitHub Pages.
 - Choose a server-capable host separately from the static frontend.
 
-The server directory documents the boundary only. No backend, worker, or downloader API is deployed. Login/Register is a UI preview only; it does not transmit or save credentials.
+The FastAPI service, task API, in-memory task manager, Dockerfile, CORS controls, per-client task rate limit, URL/IP validation, task timeout, output size limit and cancellation endpoint are implemented under server/. No public backend host has been configured or deployed. Task state is in-memory and the service is intended for one Uvicorn worker/replica until a durable queue is added. Login/Register remains UI-only.
 
 ### 7. Implement the KirinDL App–Web bridge
 
@@ -120,7 +120,7 @@ There is no .gitmodules file and no submodule is connected.
 Status: PART 1 CI AND PAGES DEPLOYMENT PASSED; VISUAL REVIEW PENDING
 
 Already present:
-- GitHub Actions CI runs the current unit tests and static build.
+- GitHub Actions CI runs JavaScript checks, frontend unit tests, static build and Python backend tests.
 - GitHub Pages deployment workflow is configured.
 - Previous scaffold/migration CI and Pages deployment runs succeeded.
 
@@ -172,3 +172,15 @@ Part 1 implementation commit: 233d629cc078823f76c0aabd3e2f3d0106b1a84a
 - Restored the footer for both desktop and mobile layouts.
 - On phones, hamburger and account buttons show icons only; accessible aria-labels retain their meaning.
 - The production homepage and Android repository remain unchanged.
+
+
+### Part 1 follow-up — bottom footer, URL icons and live engine connection
+
+- Footer layout now uses a full-height flex column so it is pushed to the viewport bottom on desktop and mobile without fixed positioning.
+- Removed the Remember Last Page / Resume card from the hamburger menu.
+- Replaced the URL leading arrow, engine dropdown chevron and submit arrow with aligned SVG icons.
+- Removed the simulated progress sequence. The browser now calls POST /api/v1/tasks, polls GET /api/v1/tasks/{id}, can request DELETE cancellation, and displays the real output-file endpoint returned by the server.
+- Added a gallery-dl item-count state; yt-dlp uses the backend stream and postprocessor progress hooks.
+- Added a local API config file. Localhost previews target http://127.0.0.1:8000; hosted previews remain disconnected until a backend HTTPS URL is set.
+- Implemented FastAPI service, yt-dlp and gallery-dl adapters, task manager, Dockerfile, dependencies, API tests and URL safety tests.
+- CI now runs Python backend tests. The backend has not yet been deployed publicly, and real downloads still need host-specific live validation.

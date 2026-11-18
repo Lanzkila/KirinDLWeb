@@ -1,7 +1,12 @@
 # Web engine
 
-The web engine is independent from the Android Kotlin engine.
+KirinDL Web now has separate server-side extractor adapters in server/kirindl_server/.
 
-A browser cannot execute the Android app's Kotlin services or directly reuse Android storage integrations. Browser-safe operations belong in this area; extraction or processing that requires native binaries, Python packages, secrets, or long-running work will need a secured backend or a handoff to the Android app.
+- yt-dlp handles supported video/audio sources and exposes stream progress and post-processing stages.
+- gallery-dl handles supported image galleries/collections and tracks completed files.
+- The FastAPI task API exposes task creation, polling, cancellation and output download.
+- FFmpeg is installed in the backend Docker image for media merging.
 
-No extractor is implemented at scaffold stage.
+The browser cannot execute Android Kotlin services or native Python/FFmpeg binaries. The frontend calls the separately hosted API. GitHub Pages remains static.
+
+The engine API is implemented but not deployed as a public service yet. See server/README.md for run/deploy requirements.

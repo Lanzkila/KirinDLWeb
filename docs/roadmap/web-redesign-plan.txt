@@ -142,3 +142,16 @@ placeholder telah diwujudkan.
 - Restored the footer on desktop and mobile.
 - Mobile header displays icon-only hamburger and account buttons with no visible text labels.
 - CI now checks syntax for the preview entry point and each component script.
+
+
+11. ENGINE IMPLEMENTATION AND FINAL UI CLEANUP
+----------------------------------------------
+- Footer bottom positioning corrected with full-height flex layout across desktop/mobile.
+- Removed the Resume Last Page card from the hamburger menu.
+- Replaced the URL input leading arrow, engine dropdown arrow and submit arrow with aligned SVG icons.
+- Replaced fake progress with real API task submission/status polling and actual output-file download link.
+- Added separate gallery progress item count for gallery-dl.
+- Implemented FastAPI backend routes for health, task creation, task state, cancellation and file download.
+- Implemented yt-dlp video/audio downloads with progress hooks and FFmpeg merging, plus gallery-dl gallery downloads with multi-file ZIP output.
+- Added URL input validation, DNS private-network rejection, CORS allowlist, request rate limiting, task concurrency/runtime/size caps, Docker runtime and backend tests.
+- The backend service is implemented but not hosted yet. Configure public/kirindl-config.js apiBase to a deployed HTTPS endpoint before using the public website for live downloads.
