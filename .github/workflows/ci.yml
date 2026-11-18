@@ -52,7 +52,7 @@ jobs:
           cleanup() {
             docker logs kirindl-web-engine-test || true
             docker rm --force kirindl-web-engine-test >/dev/null 2>&1 || true
-            rm -rf "$data_dir"
+            sudo rm -rf "$data_dir" || true
           }
           trap cleanup EXIT
           for attempt in $(seq 1 30); do
