@@ -22,3 +22,128 @@
 @media(max-width:600px){.header-inner{width:calc(100% - 28px);height:66px}.brand img{width:34px;height:34px;border-radius:10px}.brand-copy strong{font-size:16px}.header-actions{gap:7px}.header-button{min-height:39px;padding:0 10px;gap:7px;font-size:10px}.menu-trigger{padding:0 10px}.button-chevron{display:none}.account-icon{font-size:15px}.page-wrap{width:calc(100% - 28px);padding:39px 0 50px}.hero{min-height:0;margin-bottom:34px}.hero h1{font-size:clamp(37px,10vw,53px)}.hero-copy>p{font-size:12px}.hero-meta{flex-wrap:wrap;font-size:9px;line-height:1.6}.hero-mark{display:none}.section-heading h2{font-size:20px}.input-card,.panel{padding:17px}.input-card-top{align-items:flex-start}.secure-note{max-width:110px;text-align:right;line-height:1.5}.url-field{min-height:57px;gap:8px;padding-left:12px}.url-field input{height:54px;font-size:11px}.url-tools{gap:4px}.mini-action{padding:7px}.mini-action span:last-child{display:none}.input-controls{align-items:stretch;flex-direction:column}.engine-control{width:100%}.analyse-button{min-height:45px}.panel-heading h2{font-size:18px}.site-footer{align-items:flex-start;flex-direction:column;gap:8px;padding:18px 14px}}
 @media(max-width:380px){.header-button{padding:0 8px}.account-trigger{gap:5px}.account-trigger span:last-child{font-size:9px}.brand{gap:7px}.brand-copy small{font-size:7px}.menu-panel{right:-96px}.hero h1{font-size:35px}.download-summary{gap:5px}.download-summary div{padding:8px}}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
+
+/* Part 1 interaction revision: clean home, centred popovers and staged task flow. */
+.page-wrap {
+  min-height: calc(100vh - 146px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding-top: 34px;
+  padding-bottom: 34px;
+}
+.downloader-section { width: min(760px, 100%); margin: 0 auto; }
+.downloader-section .section-heading, .hero, .preview-notice, .site-footer { display: none !important; }
+.input-card { width: 100%; }
+.input-card-top { margin-bottom: 16px; }
+.menu-panel {
+  position: fixed;
+  top: 88px;
+  left: 50%;
+  right: auto;
+  width: min(390px, calc(100vw - 32px));
+  max-height: calc(100vh - 104px);
+  overflow-y: auto;
+  transform: translateX(-50%);
+  transform-origin: top center;
+}
+.menu-panel[hidden] { display: none !important; }
+.account-dialog {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  right: auto;
+  bottom: auto;
+  margin: 0;
+  transform: translate(-50%, -50%);
+}
+.account-icon, .auth-tab-icon {
+  display: inline-block;
+  width: 18px;
+  height: 18px;
+  flex: 0 0 18px;
+  fill: currentColor;
+}
+.auth-tab { display: inline-flex; align-items: center; justify-content: center; gap: 8px; }
+.task-flow { width: min(950px, 100%); margin: 24px auto 0; }
+.task-flow[hidden] { display: none !important; }
+.page-wrap:has(.task-flow:not([hidden])) { justify-content: flex-start; padding-top: 38px; }
+.task-heading-actions { display: inline-flex; align-items: center; gap: 9px; }
+.cancel-demo {
+  min-height: 29px;
+  padding: 0 10px;
+  border: 1px solid rgba(207, 146, 164, .2);
+  border-radius: 8px;
+  background: rgba(110, 48, 70, .15);
+  color: #dca9b8;
+  cursor: pointer;
+  font-size: 9px;
+}
+.cancel-demo:hover { background: rgba(130, 58, 82, .25); }
+.task-summary-copy span { max-width: min(55vw, 620px); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.progress-track span { transition: width .08s linear; }
+.process-step.is-active .step-symbol {
+  color: #8de5d5;
+  background: rgba(104, 207, 193, .16);
+  box-shadow: 0 0 18px rgba(104, 207, 193, .12);
+  animation: process-pulse 1.2s ease-in-out infinite;
+}
+.process-step.is-complete .step-symbol { color: #84e1bb; background: rgba(90, 180, 137, .14); }
+.process-step.is-active .step-status { color: #94e0d2; }
+.process-step.is-complete .step-status { color: #8bdcb6; }
+@keyframes process-pulse { 50% { opacity: .55; transform: scale(.94); } }
+.ready-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 19px 0 17px;
+  padding: 15px;
+  border: 1px solid rgba(117, 223, 179, .18);
+  border-radius: 13px;
+  background: rgba(40, 107, 83, .12);
+}
+.ready-icon {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  flex: 0 0 36px;
+  border-radius: 11px;
+  background: rgba(117, 223, 179, .14);
+  color: #93e5be;
+  font-size: 17px;
+  font-weight: 900;
+}
+.ready-copy { display: grid; gap: 5px; }
+.ready-copy strong { color: #d8f4e7; font-size: 11px; }
+.ready-copy span { color: #8fa99d; font-size: 9px; line-height: 1.6; }
+.ready-url-wrap { display: grid; gap: 8px; padding: 13px; border: 1px solid rgba(145, 164, 216, .12); border-radius: 11px; background: rgba(7, 12, 22, .6); }
+.ready-url { overflow-wrap: anywhere; color: #b9c8f2; font-size: 11px; line-height: 1.6; }
+.ready-actions { display: flex; justify-content: flex-end; gap: 9px; margin-top: 13px; }
+.copy-ready-button, .open-ready-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 37px;
+  padding: 0 12px;
+  border: 1px solid rgba(147, 165, 213, .18);
+  border-radius: 9px;
+  background: #18243a;
+  color: #bac8e8;
+  cursor: pointer;
+  font-size: 10px;
+  font-weight: 750;
+}
+.open-ready-link { border-color: rgba(121, 214, 202, .23); background: rgba(52, 123, 117, .16); color: #91ddd2; }
+@media (max-width: 600px) {
+  .page-wrap { min-height: calc(100vh - 66px); padding-top: 22px; padding-bottom: 26px; }
+  .menu-panel { top: 76px; left: 50%; right: auto; width: min(390px, calc(100vw - 24px)); max-height: calc(100vh - 88px); transform: translateX(-50%); }
+  .account-dialog { top: 50%; left: 50%; width: calc(100vw - 26px); max-height: calc(100dvh - 30px); transform: translate(-50%, -50%); }
+  .task-flow { margin-top: 18px; }
+  .page-wrap:has(.task-flow:not([hidden])) { padding-top: 22px; }
+  .ready-actions { display: grid; grid-template-columns: 1fr 1fr; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .process-step.is-active .step-symbol { animation: none; }
+}

@@ -37,8 +37,10 @@ Status: PARTIAL / SCAFFOLD + PART 1 UI PREVIEW
 - Added a basic router and placeholder pages for Home, Downloader, History, Tools, and Settings.
 - Added responsive starter styles, local development server and static build.
 - Added a separate web-specific Part 1 preview at preview.html, with styles and interactions under public/.
-- Preview includes hamburger navigation, Remember Last Page, Login/Register UI, glowing URL input, engine selector, progress layout and Downloads panel.
-- Preview validates URL syntax and demonstrates interface interactions only. It does not fetch metadata, extract media, download files, authenticate accounts or connect to Android.
+- Preview includes hamburger navigation, Remember Last Page, Material 3 SVG Login/Register icons, a glowing URL input and engine selector.
+- Home initially shows only the URL input card. The process panel appears only after a valid URL is submitted, simulates Video/Audio progress and Processing/Merging, then hands the submitted URL to a temporary Downloads result card before returning to the clean input screen.
+- The hamburger popover and Login/Register dialog are centered across desktop and mobile layouts.
+- All progress values and result handoff are UI simulation only. It does not fetch metadata, extract media, download files, authenticate accounts or connect to Android.
 - Migrated Sites Pages production homepage is intentionally retained until the user reviews the preview.
 
 ### 3. Build the real web downloader workflow
@@ -75,7 +77,7 @@ Planned capabilities:
 - Web download history and web-specific preferences.
 - Optional App–Web history/settings sync only after a shared-data contract and secure storage design exist.
 
-The Part 1 UI shows idle placeholders (Video 0%, Audio 0%, Processing Waiting, Merging Waiting) and an empty Downloads panel. No task queue, history, or cross-platform sync exists.
+The Part 1 preview now demonstrates a temporary progress panel and a temporary Downloads URL handoff, but both are simulated. No real task queue, history, media output, or cross-platform sync exists.
 
 ### 6. Define and deploy a secure backend where required
 
@@ -138,7 +140,7 @@ A successful static build or Pages deployment does not mean downloader, backend,
 
 ## Current next step
 
-Open the Part 1 preview and review the header, navigation, input form, progress panel, and Downloads placement. Apply visual corrections based on user feedback before promoting the new design to the production homepage.
+Open the updated Part 1 preview and review the centered menus, Material 3 SVG account icons, clean input-only home, simulated progress sequence and temporary Downloads handoff. Apply visual corrections based on user feedback before promoting the new design to the production homepage.
 
 Preview source: preview.html
 Raw.githack development URL: https://raw.githack.com/Lanzkila/KirinDLWeb/main/preview.html

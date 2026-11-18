@@ -3,7 +3,7 @@ KIRINDL WEB — WEBSITE REDESIGN PLAN
 
 Repository: Lanzkila/KirinDLWeb
 Related roadmap: docs/roadmap/progress-1-9.md
-Status: PART 1 UI PREVIEW IMPLEMENTED — REAL DOWNLOADER NOT CONNECTED
+Status: PART 1 INTERACTION PREVIEW UPDATED — REAL DOWNLOADER NOT CONNECTED
 
 1. MAIN OBJECTIVE
 -----------------
@@ -55,12 +55,14 @@ Header:
 - Menu hamburger dengan submenu Workspace dan Project Pages.
 - Remember Last Page: simpan section/halaman terakhir dan sediakan pautan Resume.
 - Butang Login / Register bersebelahan hamburger.
-- Login/Register memaparkan borang berasingan tetapi belum mempunyai autentikasi sebenar.
-  Tiada data akaun dihantar atau disimpan.
+- Ikon akaun dan tab Login/Register menggunakan SVG Material 3 (inline SVG).
+- Menu hamburger dan dialog Login/Register dipusatkan pada viewport untuk telefon dan laptop.
+- Borang Login/Register belum mempunyai autentikasi sebenar. Tiada data akaun dihantar atau disimpan.
 
 URL input:
 - Kotak input URL sebagai fokus utama.
 - Bingkai glow berputar dengan animasi smooth mengelilingi kotak input.
+- Paparan Home awal hanya menunjukkan kotak input utama (selain header).
 - Butang Paste dan Clear.
 - Pilihan enjin: Auto detect, yt-dlp, gallery-dl.
 - Butang Analyse link.
@@ -70,13 +72,16 @@ URL input:
 Download progress:
 - Panel progress di bawah kotak input.
 - Paparkan Video 0–100%, Audio 0–100%, Processing dan Merging.
-- Nilai semasa ialah placeholder idle (0% / Waiting), bukan kemajuan sebenar.
-- Progress hidup hanya selepas web engine dan task API disambungkan.
+- Panel proses tersembunyi ketika Home mula dibuka. Ia hanya muncul selepas URL sah dihantar.
+- Dalam preview, Video dan Audio bergerak 0–100% melalui simulasi; Processing dan Merging bertukar Active/Done mengikut urutan.
+- Selepas simulasi lengkap, panel proses hilang dan URL yang dihantar muncul sementara dalam panel Downloads.
+- Selepas beberapa saat, panel Downloads turut hilang, input dikosongkan dan skrin kembali ke paparan awal.
+- Semua peratus dan pertukaran status ialah simulasi UI. Progress sebenar hanya selepas web engine dan task API disambungkan.
 
 Downloads:
-- Panel Downloads disusun bersebelahan panel progress pada desktop dan menegak pada telefon.
-- Paparkan empty state dan ringkasan Active / Completed / Queued.
-- Fail sebenar akan disenaraikan di sini selepas downloader tersedia.
+- Panel Downloads hanya muncul selepas urutan proses preview selesai.
+- Ia menerima URL asal yang dihantar, menyediakan salinan/pautan sumber, kemudian disembunyikan semula secara automatik.
+- Tiada fail media sebenar dijana atau dimuat turun. Hasil media sebenar memerlukan backend.
 
 Preview:
 - Fail: preview.html
@@ -86,6 +91,8 @@ Preview:
   https://raw.githack.com/Lanzkila/KirinDLWeb/main/preview.html
 - Preview berasingan ini belum menggantikan homepage production.
   Homepage lama dikekalkan sehingga reka bentuk disemak dan dipersetujui.
+- Login/Register menggunakan SVG Material 3; kedua-dua popover/modal dipusatkan.
+- Progress dan Downloads bersifat dinamik dan disembunyikan semula selepas aliran demo selesai.
 
 7. PROGRESS TRACKING
 --------------------

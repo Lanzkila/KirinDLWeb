@@ -15,7 +15,7 @@ The migrated Contact, Issues, Privacy and Support pages remain available. The ne
 - Web redesign plan: docs/roadmap/web-redesign-plan.txt
 - Verified progress 1–9 roadmap: docs/roadmap/progress-1-9.md
 
-The preview includes a hamburger menu with Remember Last Page, Login/Register UI, a glowing URL input, engine selector, download progress layout and Downloads panel. It only checks URL format and demonstrates interface interactions. No media extraction, download processing, authentication or Android bridge is connected yet.
+The preview includes a hamburger menu with Remember Last Page, centered Login/Register dialog with Material 3 SVG icons, a glowing URL input and engine selector. Home initially shows only the input card. Submitting a valid link triggers a simulated Video/Audio 0–100% sequence, Processing and Merging, then temporarily hands the source URL to a Downloads result card before returning to the input-only view. This is UI simulation only; no media extraction, real download, authentication or Android bridge is connected yet.
 
 ## Repository layout
 
