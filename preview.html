@@ -12,6 +12,7 @@
   <link rel="stylesheet" href="public/components/login-register/login-register.css">
   <link rel="stylesheet" href="public/components/footer/footer.css">
   <link rel="stylesheet" href="public/components/downloader/downloader.css">
+  <script src="public/kirindl-config.js"></script>
   <script type="module" src="public/kirindl-preview.js"></script>
 </head>
 <body>
@@ -29,7 +30,7 @@
             <span class="hamburger" aria-hidden="true"><i></i><i></i><i></i></span><span class="header-action-label">Menu</span><svg class="menu-trigger-chevron" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
           </button>
           <nav class="menu-panel" id="site-menu" aria-label="Main navigation" hidden>
-            <div class="menu-panel-heading"><span class="eyebrow">KIRINDL NAVIGATION</span><strong>Explore workspace</strong><p>Jump to a section or continue from your last visit.</p></div>
+            <div class="menu-panel-heading"><span class="eyebrow">KIRINDL NAVIGATION</span><strong>Explore workspace</strong><p>Open one of the main areas.</p></div>
             <details class="menu-group" open>
               <summary><span>Workspace</span><span class="menu-count">04</span><svg class="menu-chevron" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></summary>
               <div class="menu-links">
@@ -48,10 +49,6 @@
                 <a href="pages/privacy.html" data-page-link data-page-label="Privacy"><svg class="menu-link-icon menu-link-external" viewBox="0 0 24 24" aria-hidden="true"><path d="M14 4h6v6M20 4l-9 9"/><path d="M18 13v6a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h6"/></svg>Privacy</a>
               </div>
             </details>
-            <div class="remember-card">
-              <div><span class="eyebrow">REMEMBER LAST PAGE</span><strong data-resume-label>Downloader</strong></div>
-              <a href="#downloader" data-resume-link>Resume <svg class="menu-resume-arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg></a>
-            </div>
           </nav>
         </div>
         <button class="header-button account-trigger" id="account-trigger" type="button" aria-label="Login or register">
@@ -74,7 +71,7 @@
             <label class="sr-only" for="media-url">Media URL</label>
             <div class="url-orbit">
               <div class="url-field">
-                <span class="url-symbol" aria-hidden="true">↗</span>
+                <span class="url-symbol" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.07 0l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.72"/><path d="M14 11a5 5 0 0 0-7.07 0l-3 3A5 5 0 0 0 11 21.07l1.72-1.72"/></svg></span>
                 <input id="media-url" name="url" type="url" inputmode="url" autocomplete="url" placeholder="https://paste-your-media-link-here..." spellcheck="false">
                 <div class="url-tools">
                   <button class="mini-action" type="button" id="paste-link" title="Paste from clipboard"><span aria-hidden="true">▣</span><span>Paste</span></button>
@@ -87,12 +84,12 @@
                 <label for="engine-select">Extraction engine</label>
                 <div class="select-wrap"><span class="engine-symbol" aria-hidden="true">⌘</span>
                   <select id="engine-select" name="engine"><option value="auto">Auto detect</option><option value="yt-dlp">yt-dlp</option><option value="gallery-dl">gallery-dl</option></select>
-                  <span class="select-arrow" aria-hidden="true">⌄</span>
+                  <span class="select-arrow" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg></span>
                 </div>
               </div>
-              <button class="analyse-button" id="analyse-button" type="submit"><span>Analyse link</span><span aria-hidden="true">↗</span></button>
+              <button class="analyse-button" id="analyse-button" type="submit"><span>Start download</span><svg class="action-arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg></button>
             </div>
-            <p class="form-feedback" id="form-feedback" role="status" aria-live="polite">Paste a link and press Analyse link to start the preview flow.</p>
+            <p class="form-feedback" id="form-feedback" role="status" aria-live="polite">Paste a link, choose an engine and start your download.</p>
           </form>
         </div>
       </div>
@@ -109,7 +106,7 @@
           <div class="task-summary-copy"><strong>Current link</strong><span id="task-url">Preparing URL…</span></div>
           <span class="task-state" id="task-state">ACTIVE</span>
         </div>
-        <div class="progress-list">
+        <div class="progress-list" id="stream-progress-list">
           <div class="progress-stage">
             <div class="stage-top"><div class="stage-name"><span class="stage-icon video-icon" aria-hidden="true">▶</span><div><strong>Video</strong><small>Video stream download</small></div></div><strong class="stage-percent" id="video-percent">0%</strong></div>
             <div class="progress-track"><span id="video-bar" style="width:0%"></span></div>
@@ -119,6 +116,11 @@
             <div class="progress-track"><span id="audio-bar" style="width:0%"></span></div>
           </div>
         </div>
+        <div class="gallery-progress" id="gallery-progress" hidden>
+          <div class="gallery-progress-heading"><span>Gallery files</span><strong id="gallery-count">0 files collected</strong></div>
+          <div class="gallery-progress-track"><span></span></div>
+          <p>gallery-dl reports each completed file. The total may not be known before extraction finishes.</p>
+        </div>
         <div class="process-steps">
           <div class="process-step" id="processing-step"><span class="step-symbol" aria-hidden="true">◌</span><div><strong>Processing</strong><small>Preparing media streams</small></div><span class="step-status" id="processing-status">Waiting</span></div>
           <div class="process-step" id="merging-step"><span class="step-symbol" aria-hidden="true">⤧</span><div><strong>Merging</strong><small>Combining video and audio</small></div><span class="step-status" id="merging-status">Waiting</span></div>
@@ -127,17 +129,18 @@
       </section>
 
       <section class="panel downloads-panel" id="downloads-panel" hidden>
-        <div class="panel-heading"><div><span class="eyebrow">DOWNLOAD HANDOFF</span><h2>Link ready</h2></div><span class="count-pill">Demo result</span></div>
-        <div class="ready-card">
-          <div class="ready-icon" aria-hidden="true">✓</div>
-          <div class="ready-copy"><strong>Your link reached the Downloads area</strong><span>Preview flow completed. This is the submitted source URL, not a downloaded media file.</span></div>
+        <div class="panel-heading"><div><span class="eyebrow">DOWNLOAD RESULT</span><h2 id="result-heading">File ready</h2></div><span class="count-pill" id="result-engine">Complete</span></div>
+        <div class="ready-card" id="ready-card">
+          <div class="ready-icon" id="ready-icon" aria-hidden="true">✓</div>
+          <div class="ready-copy"><strong id="ready-title">Your download is ready</strong><span id="ready-description">The backend finished processing your URL.</span></div>
         </div>
-        <div class="ready-url-wrap"><span class="eyebrow">SUBMITTED URL</span><code class="ready-url" id="ready-url"></code></div>
-        <div class="ready-actions">
-          <button class="copy-ready-button" type="button" id="copy-ready-link">Copy link</button>
-          <a class="open-ready-link" id="open-ready-link" href="#" target="_blank" rel="noopener noreferrer">Open source page ↗</a>
+        <div class="ready-url-wrap" id="ready-url-wrap"><span class="eyebrow">OUTPUT FILE</span><code class="ready-url" id="ready-url"></code></div>
+        <div class="ready-actions" id="ready-actions">
+          <button class="copy-ready-button" type="button" id="copy-ready-link">Copy source URL</button>
+          <a class="open-ready-link" id="open-ready-link" href="#" target="_blank" rel="noopener noreferrer">Download file</a>
         </div>
-        <p class="panel-footnote">This temporary result will close automatically and return to the clean link-input screen.</p>
+        <div class="ready-actions" id="error-actions" hidden><button class="copy-ready-button" type="button" id="reset-task">Back to input</button></div>
+        <p class="panel-footnote" id="result-footnote">The file will be downloaded by your browser.</p>
       </section>
     </section>
   </main>
