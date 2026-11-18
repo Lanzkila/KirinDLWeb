@@ -100,3 +100,14 @@ Preview:
 Kemas kini dokumen ini selepas setiap bahagian kerja benar-benar dilaksanakan
 dan disahkan. Jangan tandakan sesuatu sebagai siap hanya kerana fail atau
 placeholder telah diwujudkan.
+
+
+8. PART 1 IMPLEMENTATION RECORD
+--------------------------------
+- Implementation commit: 233d629cc078823f76c0aabd3e2f3d0106b1a84a
+- Web CI tests and static build: SUCCESS.
+- GitHub Pages deployment: SUCCESS.
+- CI run: https://github.com/Lanzkila/KirinDLWeb/actions/runs/44322945813
+- Deploy run: https://github.com/Lanzkila/KirinDLWeb/actions/runs/44322945645
+- Pages run: https://github.com/Lanzkila/KirinDLWeb/actions/runs/44322945030
+- Visual review on desktop/mobile is still pending user feedback.
