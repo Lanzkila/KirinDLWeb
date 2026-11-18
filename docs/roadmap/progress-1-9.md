@@ -177,8 +177,12 @@ The existing main homepage and Android repository remain unchanged by these web-
 - No DigitalOcean Droplet or paid cloud resource has been created. Live backend deployment and real-source download validation remain pending the owner's Droplet, DNS domain, SSH source IP and Cloudflare Turnstile keys.
 
 
-### 2026-11-19 — hosting temporarily deferred
+### 2026-11-19 — hosting deferred; local setup and mobile action updated
 
-- Owner requested that hosting/deployment be skipped for now; do not provision cloud resources or configure a public API endpoint until asked.
-- Local backend and frontend setup remains available through server/README.md and public/kirindl-config.js.
-- Latest pre-change Web CI on main commit `b8a49a3` completed successfully. New responsive UI work is recorded in the next commit; visual verification on a physical phone remains pending.
+- Owner requested that hosting/deployment be skipped for now; no cloud resources were provisioned and no public API endpoint was configured.
+- Added a local two-terminal setup guide in server/README.md. The frontend auto-connects to the local backend at http://127.0.0.1:8000 when opened on localhost/127.0.0.1.
+- Made the mobile Start download action a compact icon button: 42×41 px on phones and 40×40 px at widths up to 360 px. The accessible name remains "Start download".
+- Code commit: `02db3fe654127e28f6b0a4c59f38a5f81f381f43`.
+- Web CI run `44424333085`: SUCCESS — 34 backend tests passed, frontend tests and static build passed, Docker image built, and the hardened container health check returned HTTP 200.
+- Deploy workflow run `44424333018` and GitHub Pages workflow run `44424332484`: SUCCESS.
+- Physical-phone visual review and real source-site downloads remain pending. Public hosting is still deferred until the owner asks to resume it.
